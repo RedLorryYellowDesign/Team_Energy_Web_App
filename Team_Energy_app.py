@@ -44,20 +44,25 @@ fig3 = sns.lineplot(data=x1)
 
 # Header section
 with st.container():
-    st.title("Streamlit App")
-    st.subheader("This is a Test web app for LeWagon Team Energy")
-    st.write("This is a test app for LeWagon Team Energy to test Streamlit")
-    st.write("[Le Wagon Home Page](https://www.lewagon.com)")
+    Col_1,Col_2 = st.columns((3,1))
+    with Col_1:
+        st.title("Streamlit App")
+        st.subheader("This is a Test web app for LeWagon Team Energy")
+        st.write("This is a test app for LeWagon Team Energy to test Streamlit")
+        st.write("[Le Wagon Home Page](https://www.lewagon.com)")
+
+    with Col_2:
+        st_lottie(lottie_coding_Data_Science_Animation, speed=1, height=200, key="initial")
 
 # ---| USER INPUTS|---
 
 with st.container():
-    Col_1,Col_2,Col_3 = st.columns(3)
-
+    Col_1,Col_2 = st.columns((1,2))
     with Col_1:
         # tarrif
         st.subheader("Pease Select your Tarrif Type")
         User_Tarrif_Selected = st.selectbox('Pick one', ["","Fixed Tarrif", "Variable Tarrif"])
+
         if User_Tarrif_Selected == "Fixed Tarrif":
             User_Tarrif = 1
         elif User_Tarrif_Selected == "Variable Tarrif":\
@@ -80,23 +85,12 @@ with st.container():
         else:
             st.write("Opps something went wrong")
 
-
-        with Col_2:
-            st.write("---")
-            st_lottie(lottie_coding_Data_Science_Animation, height=600)
-
-        with Col_3:
-            st.write("---")
-            st.write("---")
-            st.write("---")
-
 # ---| DATA VISUALISATION |---
 
 # plot sns line graph into streamlit
-with st.container():
+with Col_2:
     st.pyplot()
-
-st.set_option('deprecation.showPyplotGlobalUse', False)
+    st.set_option('deprecation.showPyplotGlobalUse', False)
 
 # ---| FOOTER |---
 # footer section with contrabuters and links
