@@ -115,8 +115,15 @@ with st.container():
 
 # plot sns line graph into streamlit
 with Col_2:
+<<<<<<< Updated upstream
     st.pyplot()
     st.set_option('deprecation.showPyplotGlobalUse', False)
+=======
+    st.subheader("Plotly Graph")
+    # make a plotly Graph of forcast
+    fig = px.line(forcast, x="date", y="consumption", title='Consumption Forecast')
+    st.plotly_chart(fig)
+>>>>>>> Stashed changes
 
 # ---| FOOTER |---
 # footer section with contrabuters and links
