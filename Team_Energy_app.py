@@ -7,9 +7,6 @@ from streamlit_lottie import st_lottie # Allows lottie animation
 from PIL import Image # Image manipulation
 # Data Science Libraries
 import plotly as py
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
 
 # Page configuraion
 st.set_page_config(page_title="Test Streamlit App", page_icon=":smiley:", layout="wide", initial_sidebar_state="expanded")
