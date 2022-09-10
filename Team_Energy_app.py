@@ -7,6 +7,10 @@ from streamlit_lottie import st_lottie # Allows lottie animation
 from PIL import Image # Image manipulation
 # Data Science Libraries
 import plotly as py
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
 
 # Page configuraion
 st.set_page_config(page_title="Team Energy Le Wagon Project", page_icon=":smiley:", layout="wide", initial_sidebar_state="expanded")
@@ -23,8 +27,8 @@ def load_lottieurl(url):
 lottie_coding_Data_Science_Animation = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_xl3sktpc.json")
 
 # ---| MODEL WILL BE CALLE HERE |---
-def model_call(User_Tarrif_Selected,User_Group_Selected): # model will be called here
-    return 0
+# def model_call(User_Tarrif_Selected,User_Group_Selected): # model will be called here
+#     return Model_Result
 
 # ---| ALL FUNCTIONS |---
 # Header section
