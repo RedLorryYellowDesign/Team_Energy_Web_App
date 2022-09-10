@@ -84,23 +84,23 @@ with st.container():
             # Joblib import model
             filename = f'model_{name}_{tariff}.joblib'
             m = joblib.load(filename)
-            print('model loaded succcessfully')
+            #print('model loaded succcessfully')
             # ---| MODEL WILL BE CALLE HERE |---
             # def model_call(User_Tarrif_Selected,User_Group_Selected): # model will be called here
             #     return Model_Result
             train_df, test_df = create_data(name = name, tariff = User_Tarrif)
             train_wd, test_wd = get_weather(train_df, test_df)
             # Calculate forecast and MAPE
-            forecast = forecast_model(m=m, train_wd = train_wd, test_wd = test_wd, add_weather = False)
-            print('forecast made')
+            forecast = forecast_model(m=m, train_wd = train_wd, test_wd = test_wd, add_weather = True)
+            #print('forecast made')
             mape = evaluate(test_df['KWH/hh'], forecast['yhat'])
             confidence=(1-mape)*100
             # Plot the graphs
-            print('now plotting')
+            #print('now plotting')
             plot_graphs(test_df = test_df, forecast= forecast)
-            print('operation complete')
+            #print('operation complete')
 
-            st.write('Your forecast acuracy is',confidence)
+            st.write('Your forecast accuracy is',confidence)
         else:
             st.write("Opps something went wrong")
 
