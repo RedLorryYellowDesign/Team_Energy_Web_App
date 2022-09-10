@@ -66,7 +66,7 @@ with st.container():
             st.write("Please select a tarrif")
 
         # Group
-        st.subheader("Pease Select your Group")
+        st.subheader("Please Select your Group")
         User_Group_Selected = st.selectbox('Pick one', [" ","A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q"])
         if User_Group_Selected != " ":
             st.write("Please select a Group")
