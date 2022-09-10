@@ -12,12 +12,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-<<<<<<< Updated upstream
-=======
 from Team_Energy.predict  import *
 from Team_Energy.data import create_data, get_weather
 
->>>>>>> Stashed changes
 # Page configuraion
 st.set_page_config(page_title="Team Energy Le Wagon Project", page_icon=":smiley:", layout="wide", initial_sidebar_state="expanded")
 
@@ -76,7 +73,7 @@ with st.container():
             st.write("Please select a tarrif")
 
         # Group
-        st.subheader("Please Select your Group")
+        st.subheader("Pease Select your Group")
         User_Group_Selected = st.selectbox('Pick one', [" ","A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q"])
         if User_Group_Selected != " ":
             st.write("Please select a Group")
@@ -89,34 +86,24 @@ with st.container():
             # Joblib import model
             filename = f'model_{name}_{tariff}.joblib'
             m = joblib.load(filename)
-            print('model loaded succcessfully')
+            st.write("model loaded succcessfully")
+
             # Predictint here
             train_df, test_df = create_data(name = name, tariff = tariff)
             train_wd, test_wd = get_weather(train_df, test_df)
+            forcast = forecast_model(m,train_wd,test_wd,add_weather=True)
 
-            forecast_model(m,train_wd,test_wd,add_weather=False)
         else:
             st.write("Opps something went wrong")
-<<<<<<< Updated upstream
 
-
-        with Col_2:
-            st.write("---")
-            st_lottie(lottie_coding_Data_Science_Animation, height=600)
-
-        with Col_3:
-            st.write("---")
-            st.write("---")
-            st.write("---")
-
-=======
->>>>>>> Stashed changes
 # ---| DATA VISUALISATION |---
 
 # plot sns line graph into streamlit
 with Col_2:
     st.pyplot()
     st.set_option('deprecation.showPyplotGlobalUse', False)
+
+    st.pyplot(plot_graphs)
 
 # ---| FOOTER |---
 # footer section with contrabuters and links
