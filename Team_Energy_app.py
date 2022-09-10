@@ -11,6 +11,12 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
+<<<<<<< Updated upstream
+=======
+from Team_Energy.predict  import *
+from Team_Energy.data import create_data, get_weather
+
+>>>>>>> Stashed changes
 # Page configuraion
 st.set_page_config(page_title="Team Energy Le Wagon Project", page_icon=":smiley:", layout="wide", initial_sidebar_state="expanded")
 
@@ -57,9 +63,9 @@ with st.container():
         st.subheader("Pease Select your Tarrif Type")
         User_Tarrif_Selected = st.selectbox('Pick one', ["","Fixed Tarrif", "Variable Tarrif"])
         if User_Tarrif_Selected == "Fixed Tarrif":
-            User_Tarrif = 1
-        elif User_Tarrif_Selected == "Variable Tarrif":\
-            User_Tarrif = 0
+            User_Tarrif = "Std"
+        elif User_Tarrif_Selected == "Variable Tarrif":
+            User_Tarrif = "ToU"
         else:
             st.write("Please select a tarrif")
 
@@ -68,15 +74,24 @@ with st.container():
         User_Group_Selected = st.selectbox('Pick one', [" ","A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q"])
         if User_Group_Selected != " ":
             st.write("Please select a Group")
-        else:
-            User_Group = User_Group_Selected
 
         # Submit Button
-        if st.button("Submit"):
+        if st.button("Submit") and User_Tarrif_Selected != "" and User_Group_Selected != " ":
             st.write("Model will be called here")
-            st.write(model_call(User_Tarrif_Selected,User_Group_Selected))
+            name = User_Group_Selected
+            tariff = User_Tarrif
+            # Joblib import model
+            filename = f'model_{name}_{tariff}.joblib'
+            m = joblib.load(filename)
+            print('model loaded succcessfully')
+            # Predictint here
+            train_df, test_df = create_data(name = name, tariff = tariff)
+            train_wd, test_wd = get_weather(train_df, test_df)
+
+            forecast_model(m,train_wd,test_wd,add_weather=False)
         else:
             st.write("Opps something went wrong")
+<<<<<<< Updated upstream
 
 
         with Col_2:
@@ -88,6 +103,8 @@ with st.container():
             st.write("---")
             st.write("---")
 
+=======
+>>>>>>> Stashed changes
 # ---| DATA VISUALISATION |---
 
 # plot sns line graph into streamlit
