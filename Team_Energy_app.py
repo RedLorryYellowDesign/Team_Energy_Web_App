@@ -7,13 +7,21 @@ from streamlit_lottie import st_lottie # Allows lottie animation
 from PIL import Image # Image manipulation
 # Data Science Libraries
 import plotly as py
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 import seaborn as sns
+
 
 # Page configuraion
 st.set_page_config(page_title="Team Energy Le Wagon Project", page_icon=":smiley:", layout="wide", initial_sidebar_state="expanded")
+
+# Use local css file to style the app
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
+local_css("style/style.css")
 
 # fucntion to load lottie animation
 def load_lottieurl(url):
@@ -30,7 +38,10 @@ lottie_coding_Data_Science_Animation = load_lottieurl("https://assets5.lottiefil
 # def model_call(User_Tarrif_Selected,User_Group_Selected): # model will be called here
 #     return Model_Result
 
-# ---| ALL FUNCTIONS |---
+# ---| SEANORN DEFULT PLOT |---
+x1 = np.linspace(0, 20, 100)
+fig3 = sns.lineplot(data=x1)
+
 # Header section
 with st.container():
     st.title("Streamlit App")
@@ -56,15 +67,11 @@ with st.container():
 
         # Group
         st.subheader("Pease Select your Group")
-        User_Group_Selected = st.selectbox('Pick one', ["","Group1", "Group2", "Group3"])
-        if User_Group_Selected == "Group1":
-            User_Group = 1
-        elif User_Group_Selected == "Group2":
-            User_Group = 2
-        elif User_Group_Selected == "Group3":
-            User_Group = 3
-        else:
+        User_Group_Selected = st.selectbox('Pick one', [" ","A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q"])
+        if User_Group_Selected != " ":
             st.write("Please select a Group")
+        else:
+            User_Group = User_Group_Selected
 
         # Submit Button
         if st.button("Submit"):
@@ -85,6 +92,23 @@ with st.container():
 
 # ---| DATA VISUALISATION |---
 
+# plot sns line graph into streamlit
+with st.container():
+    st.pyplot()
+
+st.set_option('deprecation.showPyplotGlobalUse', False)
+
 # ---| FOOTER |---
+# footer section with contrabuters and links
+with st.container():
+    st.write("---")
+    col1, col2, col3= st.columns(3)
+    with col1:
+        st.write("The Team")
+        st.write(" ")
+    with col2:
+        st.write(" ")
+    with col3:
+        st.write(" ")
 
 # ---| END OF CODE |---
