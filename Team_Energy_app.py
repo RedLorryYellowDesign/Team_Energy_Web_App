@@ -11,18 +11,13 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-
 # ---| USED FOR TESTING WITHOUT API |---
 Run_API_Mode = False
-
 if Run_API_Mode == True:
-
     from Team_Energy.predict  import *
     from Team_Energy.data import create_data, get_weather
-
 # Page configuraion
 st.set_page_config(page_title="Team Energy Le Wagon Project", page_icon=":smiley:", layout="wide", initial_sidebar_state="expanded")
-
 # Use local css file to style the app
 def local_css(file_name):
     with open(file_name) as f:
