@@ -11,11 +11,16 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import joblib
 # ---| USED FOR TESTING WITHOUT API |---
 Run_API_Mode = False
-if Run_API_Mode == True:
-    from Team_Energy.predict  import *
-    from Team_Energy.data import create_data, get_weather
+# Calling API
+from Team_Energy.predict  import *
+from Team_Energy.data import create_data, get_weather
+fig_1 = 1
+fig_2 = 2
+fig_3 = 3
+
 # Page configuraion
 st.set_page_config(page_title="Team Energy Le Wagon Project", page_icon=":smiley:", layout="wide", initial_sidebar_state="expanded")
 # Use local css file to style the app
@@ -90,58 +95,47 @@ with st.container():
             name = User_Group_Selected
             tariff = User_Tarrif
             # Joblib import model
-            filename = f'model_{name}_{tariff}.joblib'
+            filename = f'Team_Energy/model_{name}_{tariff}.joblib'
             m = joblib.load(filename)
             st.write("model loaded succcessfully")
 
             # Predictint here
             train_df, test_df = create_data(name = name, tariff = tariff)
             train_wd, test_wd = get_weather(train_df, test_df)
-            forcast = forecast_model(m,train_wd,test_wd,add_weather=True)
+            forecast = forecast_model(m,train_wd,test_wd,add_weather=True)
+
+            # return dataframe with predictions
+            st
+            st.write(forecast.head())
+
+
+
+        # Plot
+            fig_1 = plt.figure(figsize=(15, 6))
+            sns.lineplot(x=forecast['ds'],y=forecast['yhat'],label='Forecast');
+            sns.lineplot(x=test_df['DateTime'],y=test_df['KWH/hh'],label='Actual');
+
+            fig_2 = figure(figsize=(15,6))
+            sns.lineplot(x=test_wd['DateTime'],y=test_wd['temperature'],label='Weather');
+            st.pyplot(fig_1)
+            st.pyplot(fig_2)
 
         else:
             st.write("Opps something went wrong")
 
-            # test submit buttion for API
-            if st.button("Submit API"):
-                st.write(API_Call = ("http://127.0.0.1:8000/api/v1/users/%7Buser_id%7D"))
-
-                # Predictint here
-                train_df, test_df = create_data(name = name, tariff = tariff)
-                train_wd, test_wd = get_weather(train_df, test_df)
-                forcast = forecast_model(m,train_wd,test_wd,add_weather=True)
-
-        # Submit Button
-        if st.button("Submit"):
-            st.write("Model will be called here")
-            name=User_Group_Selected,tariff=User_Tarrif
-            # Joblib import model
-            filename = f'model_{name}_{tariff}.joblib'
-            m = joblib.load(filename)
-            #print('model loaded succcessfully')
-            # ---| MODEL WILL BE CALLE HERE |---
-            # def model_call(User_Tarrif_Selected,User_Group_Selected): # model will be called here
-            #     return Model_Result
-            train_df, test_df = create_data(name = name, tariff = User_Tarrif)
-            train_wd, test_wd = get_weather(train_df, test_df)
-            # Calculate forecast and MAPE
-            forecast = forecast_model(m=m, train_wd = train_wd, test_wd = test_wd, add_weather = True)
-            #print('forecast made')
-            mape = evaluate(test_df['KWH/hh'], forecast['yhat'])
-            confidence=(1-mape)*100
-            # Plot the graphs
-            #print('now plotting')
-            plot_graphs(test_df = test_df, forecast= forecast)
-            #print('operation complete')
+            # # test submit buttion for API
+            # if st.button("Submit API"):
+            #     st.write(API_Call = ("http://127.0.0.1:8000/api/v1/users/%7Buser_id%7D"))
 
 # ---| DATA VISUALISATION |---
 
-# plot sns line graph into streamlit
-with Col_2:
-    st.pyplot()
-    st.set_option('deprecation.showPyplotGlobalUse', False)
 
-    st.pyplot(plot_graphs)
+# # plot sns line graph into streamlit
+#     st.pyplot()
+
+#     st.set_option('deprecation.showPyplotGlobalUse', False)
+
+#     st.pyplot(plot_graphs)
 
 # ---| FOOTER |---
 # footer section with contrabuters and links
