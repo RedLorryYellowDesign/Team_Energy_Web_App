@@ -47,7 +47,7 @@ def evaluate(actual,forecast):
 if __name__ == "__main__":
     # define df's using data.py
 
-    train_df, test_df = create_data(name = name, tariff = tariff)
+    train_df, test_df = create_data(name = 'name', tariff = 'tariff')
     train_wd, test_wd = get_weather(train_df, test_df)
     print('dataframes loaded')
     # Calculate forecast and MAPE
