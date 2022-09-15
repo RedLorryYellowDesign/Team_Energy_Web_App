@@ -150,42 +150,25 @@ with st.container():
             else:
                 st.write("Please select a tarrif")
 
-        with tab2:
-            st.write("Please Select your Group Type")
-            User_Group_Selected = st.selectbox('Pick one', [" ","A","E","Q"])
 
         with tab3:
-            st.write("Question 1 Text")
-            Question_1 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_1")
             if Question_1 != " ":
                 st.write("Please select an option")
 
         with tab4:
-            st.write("Question 1 Text")
-            Question_2 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_2")
             if Question_2 != " ":
                 st.write("Please select an option")
         with tab5:
-            st.write("Question 1 Text")
-            Question_3 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_3")
             if Question_3 != " ":
                 st.write("Please select an option")
         with tab6:
-            st.write("Question 1 Text")
-            Question_4 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_4")
 
             if Question_4 != " ":
-                st.write("Please select an option")
-        with tab7:
-            st.write("Question 1 Text")
-            Question_5 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_5")
-            if Question_5 != " ":
                 st.write("Please select an option")
 
         # Submit Button
         if st.button("Submit"):
             # Predict_Model(User_Tarrif_Selected,User_Group_Selected )
-            if User_Tarrif_Selected != "" and User_Group_Selected != " ":
                 st.write("Model will be called here")
                 name = User_Group_Selected
                 tariff = User_Tarrif
@@ -230,8 +213,6 @@ with st.container():
                 yaxis_title='Y axis'
                 )
             Show_Lode = False
-            st_fig.show()
-            st.plotly_chart(st_fig)
 
             # Plotly_Graph = go.Figure()
             # fig_43 = px.line(
