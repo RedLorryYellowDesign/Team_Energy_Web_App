@@ -1,3 +1,15 @@
+# ---| TEAM ENERGY STREAMLIT WEB APP |--->>>>
+# >>>> Site Structure & Desing
+# |--------| ------------------------------------------ |
+# |SIDE BAR| Page Title                                 |
+# |--------| Page Into Text                             |
+# |--------| My Pic | MY Work Experience | My Education |
+# |--------| ------------------------------------------ |
+# |--------| My Skills | My Interests | My Contact Info |
+# |--------| ------------------------------------------ |
+# |--------| Footer                                     |
+# |--------| ------------------------------------------ |
+
 # ---| ALL IMPORT LIBRARIES |--->>>>
 # ---| BASE STREAMLIT LIBRARIES |--->>>>
 from decimal import FloatOperation
@@ -9,6 +21,7 @@ from PIL import Image # Image manipulation
 # ---| DATASCIANCE LIBRARIES |--->>>>
 import plotly as py
 import plotly.express as px
+import plotly.graph_objects as go
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -17,6 +30,8 @@ import joblib
 import plotly.figure_factory as ff
 
 # ---| API ON/OFF DEPENDENT LIBRARIES |--->>>>
+Show_Lode = False
+
 API_MODE = False
 if API_MODE == False:
     from Team_Energy.predict  import *
@@ -93,10 +108,16 @@ def plotly_line_plot(df, x, y, title, xlabel, ylabel, hue=None):
 # ---| IMPORTING LOTTIE ASSEST |---
 lottie_coding_Data_Science_Animation = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_xl3sktpc.json")
 Team_Lottie_Animation = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_vctzcozn.json")
+Loding_Animation = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_ibxFWH.json")
 # ---| IMPORTING IMAGES |--->>>>
 
 # ---| SIDE BAR |--->>>>
+with st.sidebar:
+    st.title("Streamlit App")
+
 # lineplot = st.sidebar.selectbox("Select Plot Type", ["Line Plot", "Bar Plot", "Line Plot with Plotly"])
+
+
 # ---| HEADER SECTION |--->>>>
 with st.container():
     Header_col_1, Header_col_2, Header_col_3, Header_col_4 = st.columns(4)
@@ -177,9 +198,12 @@ with st.container():
                 train_wd, test_wd = get_weather(train_df, test_df)
                 forecast = forecast_model(m,train_wd,test_wd,add_weather=True)
                 Show_Graph = True
-
+                Show_Lode = True
     with Main_col_2:
         # ---| PLOTTING |--->>>>
+        while Show_Lode == True:
+            st_lottie(Loding_Animation, speed=1, key="v")
+    with Main_col_2:
         if Show_Graph == True:
             fig_1 = plt.figure(figsize=(15, 6))
             sns.lineplot(x=forecast['ds'],y=forecast['yhat'],label='Forecast');
@@ -189,12 +213,70 @@ with st.container():
             st.pyplot(fig_1)
             st.pyplot(fig_2)
 
-            fig_43 = px.line(x=forecast['ds'],y=forecast['yhat'],title ='Forecast');
+            x_axis = np.linspace(0, 1, 100)
+            y_axis = np.random.randn(100) - 5
 
+            st_fig = go.Figure()
+            obj = go.Scatter(
+                x = x_axis,
+                y = y_axis,
+                line = dict(color='firebrick', width=4)
+            )
 
-            # # ---| PLOTLY PLOT |--->>>>
-            st.plotly_chart(fig_43)
+            st_fig.add_trace(obj)
 
+            st_fig.update_layout(
+                title='Line Plot',
+                xaxis_title='X axis',
+                yaxis_title='Y axis'
+                )
+            Show_Lode = False
+            st_fig.show()
+            st.plotly_chart(st_fig)
+
+            # Plotly_Graph = go.Figure()
+            # fig_43 = px.line(
+            #     x=forecast['ds'],
+            #     y=forecast['yhat'],
+            #     markers=True,
+            #     title ='Forecast')
+
+            # Plotly_Graph.add_trace(fig_43)
+
+            # st.plotly_chart(Plotly_Graph)
+
+            # #Lines mode
+            # go_fig = go.Figure()
+            # obj_lines = go.Scatter(
+            #     x = x_axis,
+            #     y = y0,
+            #     mode = 'lines',
+            #     name = 'lines'
+            # )
+
+            # #Lines + markers mode
+            # obj_lm = go.Scatter(
+            #     x = x_axis,
+            #     y = y1,
+            #     mode = 'lines+markers',
+            #     name = 'lines+markers'
+            # )
+
+            # #Markers mode
+            # obj_markers = go.Scatter(
+            #     x = x_axis,
+            #     y = y2,
+            #     mode = 'markers',
+            #     name = 'markers'
+            # )
+
+            # #Adding traces
+            # go_fig.add_trace(obj_lines)
+            # go_fig.add_trace(obj_lm)
+            # go_fig.add_trace(obj_markers)
+
+            # #Create the plot
+            # go_fig.show()
 # ---| FOOTER SECTION|--->>>>
 with st.container():
     st.write("---")
