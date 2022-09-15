@@ -199,10 +199,10 @@ with st.container():
                 forecast = forecast_model(m,train_wd,test_wd,add_weather=True)
                 Show_Graph = True
                 Show_Lode = True
-    with Main_col_2:
+    # with Main_col_2:
         # ---| PLOTTING |--->>>>
-        while Show_Lode == True:
-            st_lottie(Loding_Animation, speed=1, key="v")
+        # while Show_Lode == True:
+        #     st_lottie(Loding_Animation, speed=1, height=200, key="Loding_Animation")
     with Main_col_2:
         if Show_Graph == True:
             fig_1 = plt.figure(figsize=(15, 6))
@@ -222,7 +222,6 @@ with st.container():
                 y = y_axis,
                 line = dict(color='firebrick', width=4)
             )
-
             st_fig.add_trace(obj)
 
             st_fig.update_layout(
