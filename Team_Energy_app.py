@@ -13,6 +13,7 @@
 # ---| ALL IMPORT LIBRARIES |--->>>>
 # ---| BASE STREAMLIT LIBRARIES |--->>>>
 from decimal import FloatOperation
+from multiprocessing.sharedctypes import Value
 from pickle import FALSE
 import requests # Allows use of URL imports
 import streamlit as st # Allows compatibility with Streamlit
@@ -31,7 +32,7 @@ import plotly.figure_factory as ff
 
 # ---| API ON/OFF DEPENDENT LIBRARIES |--->>>>
 Show_Lode = False
-
+User_Group_Selected = 0
 API_MODE = False
 if API_MODE == False:
     from Team_Energy.predict  import *
@@ -116,6 +117,39 @@ with st.sidebar:
     st.title("Streamlit App")
 
 # lineplot = st.sidebar.selectbox("Select Plot Type", ["Line Plot", "Bar Plot", "Line Plot with Plotly"])
+# ---| Questions |--->>>>
+Q1dict = {
+  ""'Detached house' : 4,
+  "Flat or Maisonette": 0,
+  "Semi-detached house": 2,
+  "Terraced house": 0
+}
+Q2dict = {""'Owned outright': 3,
+          'Mortgaged': 2,
+          'Shared/Equity Ownerhsip': 1,
+          'Privately Rented': 0,
+          'Social renting': 0
+          }
+
+Q3dict = {""'1 bedroom': 0,
+          '2 bedrooms': 1,
+          '3 bedrooms': 2,
+          '4+ bedrooms': 4}
+
+Q4dict = {""'£0-£20,000':0,
+          '£20,000-£40,000': 1,
+          '£40,000-£60,000': 1,
+          '£80,000 +': 4}
+
+def questions(Q1, Q2, Q3, Q4):
+    total_values = Q1dict[Q1] + Q2dict[Q2] + Q3dict[Q3] + Q4dict[Q4]
+    if total_values > 10:
+        User_Group_Selected = 'A'
+    elif total_values in range(5,9):
+        User_Group_Selected = 'H'
+    elif total_values < 5:
+        User_Group_Selected = 'Q'
+    return User_Group_Selected
 
 
 # ---| HEADER SECTION |--->>>>
@@ -150,6 +184,7 @@ with st.container():
             else:
                 st.write("Please select a tarrif")
 
+<<<<<<< Updated upstream
         with tab2:
             st.write("Please Select your Group Type")
             User_Group_Selected = st.selectbox('Pick one', [" ","A","E","Q"])
@@ -157,10 +192,20 @@ with st.container():
         with tab3:
             st.write("Question 1 Text")
             Question_1 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_1")
+=======
+        # with tab2:
+        #     st.write("Please Select your Group Type")
+        #     User_Group_Selected = st.selectbox('Pick one', [" ","A","E","Q"])
+
+        with tab3:
+            st.write("What is your house type?")
+            Question_1 = st.selectbox('Pick one', ['Detached house', "Flat or Maisonette", "Semi-detached house","Terraced house"], key="Question_1")
+>>>>>>> Stashed changes
             if Question_1 != " ":
                 st.write("Please select an option")
 
         with tab4:
+<<<<<<< Updated upstream
             st.write("Question 1 Text")
             Question_2 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_2")
             if Question_2 != " ":
@@ -173,6 +218,20 @@ with st.container():
         with tab6:
             st.write("Question 1 Text")
             Question_4 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_4")
+=======
+            st.write("What is your property ownership status?")
+            Question_2 = st.selectbox('Pick one', ['Owned outright', 'Mortgaged', 'Shared/Equity Ownerhsip','Privately Rented', 'Social renting'], key="Question_2")
+            if Question_2 != " ":
+                st.write("Please select an option")
+        with tab5:
+            st.write("How many Bedrooms does your house have?")
+            Question_3 = st.selectbox('Pick one', ['1 bedroom', '2 bedrooms', '3 bedrooms', '4+ bedrooms'], key="Question_3")
+            if Question_3 != " ":
+                st.write("Please select an option")
+        with tab6:
+            st.write("What is your estimated household income?")
+            Question_4 = st.selectbox('Pick one', ['£0-£20,000', '£20,000-£40,000','£40,000-£60,000','£80,000 +'], key="Question_4")
+>>>>>>> Stashed changes
 
             if Question_4 != " ":
                 st.write("Please select an option")
@@ -185,8 +244,13 @@ with st.container():
         # Submit Button
         if st.button("Submit"):
             # Predict_Model(User_Tarrif_Selected,User_Group_Selected )
+<<<<<<< Updated upstream
             if User_Tarrif_Selected != "" and User_Group_Selected != " ":
+=======
+            if User_Tarrif_Selected != '' and User_Group_Selected != '':
+>>>>>>> Stashed changes
                 st.write("Model will be called here")
+                User_Group_Selected = questions(Q1 = Question_1, Q2 = Question_2, Q3 = Question_3, Q4 = Question_4)
                 name = User_Group_Selected
                 tariff = User_Tarrif
                 # ---| IMPORT JOBLIT MODEL |--->>>>
@@ -199,10 +263,23 @@ with st.container():
                 forecast = forecast_model(m,train_wd,test_wd,add_weather=True)
                 Show_Graph = True
                 Show_Lode = True
+<<<<<<< Updated upstream
     with Main_col_2:
         # ---| PLOTTING |--->>>>
         while Show_Lode == True:
             st_lottie(Loding_Animation, speed=1, key="v")
+=======
+    # with Main_col_2:
+<<<<<<< Updated upstream
+        # ---| PLOTTING |--->>>>
+        # while Show_Lode == True:
+        #     st_lottie(Loding_Animation, speed=1, height=200, key="Loding_Animation")
+=======
+    #     # ---| PLOTTING |--->>>>
+    #     while Show_Lode == True:
+    #         st_lottie(Loding_Animation, speed=1, key="v")
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     with Main_col_2:
         if Show_Graph == True:
             fig_1 = plt.figure(figsize=(15, 6))
@@ -231,8 +308,13 @@ with st.container():
                 yaxis_title='Y axis'
                 )
             Show_Lode = False
+<<<<<<< Updated upstream
             st_fig.show()
             st.plotly_chart(st_fig)
+=======
+            #st_fig.show()
+            st.plotly_chart(st_fig, use_container_width= True)
+>>>>>>> Stashed changes
 
             # Plotly_Graph = go.Figure()
             # fig_43 = px.line(
