@@ -9,7 +9,6 @@
 # |--------| ------------------------------------------ |
 # |--------| Footer                                     |
 # |--------| ------------------------------------------ |
-
 # ---| ALL IMPORT LIBRARIES |--->>>>
 # ---| BASE STREAMLIT LIBRARIES |--->>>>
 from decimal import FloatOperation
@@ -28,7 +27,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import joblib
 import plotly.figure_factory as ff
-
+import time
 # ---| API ON/OFF DEPENDENT LIBRARIES |--->>>>
 Show_Lode = False
 
@@ -114,18 +113,16 @@ Loding_Animation = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20
 # ---| SIDE BAR |--->>>>
 with st.sidebar:
     st.title("Streamlit App")
-
-# lineplot = st.sidebar.selectbox("Select Plot Type", ["Line Plot", "Bar Plot", "Line Plot with Plotly"])
-
+    st.subheader("Test")
+    st.subheader("This is a Test web app for LeWagon Team Energy")
+    st.write("This is a test app for LeWagon Team Energy to test Streamlit")
+    st.write("[Le Wagon Home Page](https://www.lewagon.com)")
 
 # ---| HEADER SECTION |--->>>>
 with st.container():
     Header_col_1, Header_col_2, Header_col_3, Header_col_4 = st.columns(4)
     with Header_col_1:
         st.title("Streamlit App")
-        st.subheader("This is a Test web app for LeWagon Team Energy")
-        st.write("This is a test app for LeWagon Team Energy to test Streamlit")
-        st.write("[Le Wagon Home Page](https://www.lewagon.com)")
     with Header_col_2:
         st.empty()
     with Header_col_3:
@@ -134,6 +131,7 @@ with st.container():
         st.empty()
 # ---| MAIN SECTION |--->>>>
 with st.container():
+    st.write("---")
     Main_col_1, Main_col_2 = st.columns((2,4))
     with Main_col_1:
         # Insert containers separated into tabs:
@@ -181,101 +179,47 @@ with st.container():
             Question_5 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_5")
             if Question_5 != " ":
                 st.write("Please select an option")
-
         # Submit Button
         if st.button("Submit"):
             # Predict_Model(User_Tarrif_Selected,User_Group_Selected )
             if User_Tarrif_Selected != "" and User_Group_Selected != " ":
-                st.write("Model will be called here")
+                with st.spinner('Calling the model'):
+                    time.sleep(5)
+                st.success('Good so far')
                 name = User_Group_Selected
                 tariff = User_Tarrif
                 # ---| IMPORT JOBLIT MODEL |--->>>>
                 filename = f'Team_Energy/model_{name}_{tariff}.joblib'
                 m = joblib.load(filename)
-                st.write("model loaded succcessfully")
+                with st.spinner('Spinning up the Hard Drives'):
+                    time.sleep(5)
+                st.success('All Working Well')
                 # ---| PREDICTING |--->>>>
+                m = joblib.load(filename)
+                with st.spinner('Last Part! This can take a second or two'):
+                    time.sleep(5)
                 train_df, test_df = create_data(name = name, tariff = tariff)
                 train_wd, test_wd = get_weather(train_df, test_df)
                 forecast = forecast_model(m,train_wd,test_wd,add_weather=True)
                 Show_Graph = True
-                Show_Lode = True
-    # with Main_col_2:
-        # ---| PLOTTING |--->>>>
-        # while Show_Lode == True:
-        #     st_lottie(Loding_Animation, speed=1, height=200, key="Loding_Animation")
+                st.success('Done, Plostting Graphis now.')
+
     with Main_col_2:
         if Show_Graph == True:
+            my_bar = st.progress(0)
+            for percent_complete in range(100):
+                time.sleep(0.1)
+            my_bar.progress(percent_complete + 1)
             fig_1 = plt.figure(figsize=(15, 6))
             sns.lineplot(x=forecast['ds'],y=forecast['yhat'],label='Forecast');
             sns.lineplot(x=test_df['DateTime'],y=test_df['KWH/hh'],label='Actual');
             fig_2 = figure(figsize=(15,6))
             sns.lineplot(x=test_wd['DateTime'],y=test_wd['temperature'],label='Weather');
+            with st.spinner('Wait for it...'):
+                time.sleep(5)
+            st.success('Done!')
             st.pyplot(fig_1)
             st.pyplot(fig_2)
-
-            x_axis = np.linspace(0, 1, 100)
-            y_axis = np.random.randn(100) - 5
-
-            st_fig = go.Figure()
-            obj = go.Scatter(
-                x = x_axis,
-                y = y_axis,
-                line = dict(color='firebrick', width=4)
-            )
-            st_fig.add_trace(obj)
-
-            st_fig.update_layout(
-                title='Line Plot',
-                xaxis_title='X axis',
-                yaxis_title='Y axis'
-                )
-            Show_Lode = False
-            st_fig.show()
-            st.plotly_chart(st_fig)
-
-            # Plotly_Graph = go.Figure()
-            # fig_43 = px.line(
-            #     x=forecast['ds'],
-            #     y=forecast['yhat'],
-            #     markers=True,
-            #     title ='Forecast')
-
-            # Plotly_Graph.add_trace(fig_43)
-
-            # st.plotly_chart(Plotly_Graph)
-
-            # #Lines mode
-            # go_fig = go.Figure()
-            # obj_lines = go.Scatter(
-            #     x = x_axis,
-            #     y = y0,
-            #     mode = 'lines',
-            #     name = 'lines'
-            # )
-
-            # #Lines + markers mode
-            # obj_lm = go.Scatter(
-            #     x = x_axis,
-            #     y = y1,
-            #     mode = 'lines+markers',
-            #     name = 'lines+markers'
-            # )
-
-            # #Markers mode
-            # obj_markers = go.Scatter(
-            #     x = x_axis,
-            #     y = y2,
-            #     mode = 'markers',
-            #     name = 'markers'
-            # )
-
-            # #Adding traces
-            # go_fig.add_trace(obj_lines)
-            # go_fig.add_trace(obj_lm)
-            # go_fig.add_trace(obj_markers)
-
-            # #Create the plot
-            # go_fig.show()
 # ---| FOOTER SECTION|--->>>>
 with st.container():
     st.write("---")
@@ -298,14 +242,3 @@ with st.container():
         st.write("Jordan Haynes")
         st.write("[haynesj1](https://github.com/haynesj1)")
 # ---| END OF CODE |--->>>>
-        # my_slider_val = st.slider('Quinn Mallory', 1, 88)
-        # st.text('Fixed width text')
-        # st.markdown('_Markdown_') # see *
-        # st.latex(r''' e^{i\pi} + 1 = 0 ''')
-        # st.write('Most objects') # df, err, func, keras!
-        # st.write(['st', 'is <', 3]) # see *
-        # st.title('My title')
-        # st.header('My header')
-        # st.subheader('My sub')
-        # st.code('for i in range(8): foo()')
-        # st.markdown("This **word** is bold. This <em>word</em> is italic.")
