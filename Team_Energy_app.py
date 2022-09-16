@@ -119,9 +119,7 @@ Loding_Animation = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20
 # ---| SIDE BAR |--->>>>
 with st.sidebar:
     st.title("Streamlit App")
-
-# lineplot = st.sidebar.selectbox("Select Plot Type", ["Line Plot", "Bar Plot", "Line Plot with Plotly"])
-
+    st.write("This is a Streamlit App")
 
 # ---| HEADER SECTION |--->>>>
 with st.container():
@@ -211,6 +209,8 @@ with st.container():
     with Main_col_2:
         if Show_Graph == True:
             with st.spinner('Wait for it...'):
+                time.sleep(5)
+
                 fig_1 = plt.figure(figsize=(15, 6))
                 sns.lineplot(x=forecast['ds'],y=forecast['yhat'],label='Forecast');
                 sns.lineplot(x=test_df['DateTime'],y=test_df['KWH/hh'],label='Actual');
