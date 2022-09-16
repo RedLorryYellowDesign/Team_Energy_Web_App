@@ -28,15 +28,14 @@ import seaborn as sns
 import joblib
 import plotly.figure_factory as ff
 import time
-# ---| API ON/OFF DEPENDENT LIBRARIES |--->>>>
-Show_Lode = False
-
+# ---| VERIABLES |--->>>>
 API_MODE = False
+Show_Graph = False
+Lottie_off = False
+# ---| API ON/OFF DEPENDENT LIBRARIES |--->>>>
 if API_MODE == False:
     from Team_Energy.predict  import *
     from Team_Energy.data import create_data, get_weather
-# ---| VERIABLES |--->>>>
-Show_Graph = False
 # ---| PAGE CONFIGURATION |--->>>>
 st.set_page_config(page_title="Team Energy Le Wagon Project", page_icon=":zap:", layout="wide", initial_sidebar_state="expanded")
 # ---| LOAD CSS FOR STYLEING |---
@@ -105,11 +104,11 @@ def plotly_line_plot(df, x, y, title, xlabel, ylabel, hue=None):
     fig_03 = py.line(df, x=x, y=y, title=title, labels={x:xlabel, y:ylabel}, color=hue)
     st.plotly_chart(fig_03)
 # ---| IMPORTING LOTTIE ASSEST |---
-lottie_coding_Data_Science_Animation = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_xl3sktpc.json")
-Team_Lottie_Animation = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_vctzcozn.json")
-Loding_Animation = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_ibxFWH.json")
+if Lottie_off == False:
+    lottie_coding_Data_Science_Animation = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_xl3sktpc.json")
+    Team_Lottie_Animation = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_vctzcozn.json")
+    Loding_Animation = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_ibxFWH.json")
 # ---| IMPORTING IMAGES |--->>>>
-
 # ---| SIDE BAR |--->>>>
 with st.sidebar:
     st.title("Streamlit App")
@@ -117,69 +116,32 @@ with st.sidebar:
     st.subheader("This is a Test web app for LeWagon Team Energy")
     st.write("This is a test app for LeWagon Team Energy to test Streamlit")
     st.write("[Le Wagon Home Page](https://www.lewagon.com)")
-
 # ---| HEADER SECTION |--->>>>
 with st.container():
     Header_col_1, Header_col_2, Header_col_3, Header_col_4 = st.columns(4)
     with Header_col_1:
-        st.title("Streamlit App")
+        st.title("Energy.app")
     with Header_col_2:
         st.empty()
     with Header_col_3:
         st.empty()
     with Header_col_4:
         st.empty()
-# ---| MAIN SECTION |--->>>>
+# ---| MAIN SECTION |--->>>>  Cleaned
 with st.container():
-    st.write("---")
-    Main_col_1, Main_col_2 = st.columns((2,4))
-    with Main_col_1:
-        # Insert containers separated into tabs:
-        tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["First Question", "Second Question", "Third Question", "Fourth Question", "Fifth Question", "Sixth Question", "Seventh Question"])
-        with tab1:
-            st.write("Please Select your Tarrif Type")
-            User_Tarrif_Selected = st.selectbox('Pick one', ["","Fixed Tarrif", "Variable Tarrif"])
-            if User_Tarrif_Selected == "Fixed Tarrif":
-                User_Tarrif = "Std"
-                st.write("You have selected Fixed Tarrif")
-            elif User_Tarrif_Selected == "Variable Tarrif":
-                User_Tarrif = "ToU"
-                st.write("You have selected Variable Tarrif")
-            else:
-                st.write("Please select a tarrif")
-
+    tab1, tab2, tab3 = st.tabs(["First Question", "Second Question","Submit"])
+    with tab1:
+        st.write("Please Select your Tarrif Type")
+        User_Tarrif_Selected = st.selectbox('Pick one', ["","Fixed Tarrif", "Variable Tarrif"])
+        if User_Tarrif_Selected != " ":
+            st.warning("Please select a tarrif")
+        else:
+            User_Tarrif = User_Tarrif_Selected
+            st.write (f"You have selected {User_Tarrif} Tarrif")
         with tab2:
             st.write("Please Select your Group Type")
             User_Group_Selected = st.selectbox('Pick one', [" ","A","E","Q"])
-
-        with tab3:
-            st.write("Question 1 Text")
-            Question_1 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_1")
-            if Question_1 != " ":
-                st.write("Please select an option")
-
-        with tab4:
-            st.write("Question 1 Text")
-            Question_2 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_2")
-            if Question_2 != " ":
-                st.write("Please select an option")
-        with tab5:
-            st.write("Question 1 Text")
-            Question_3 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_3")
-            if Question_3 != " ":
-                st.write("Please select an option")
-        with tab6:
-            st.write("Question 1 Text")
-            Question_4 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_4")
-
-            if Question_4 != " ":
-                st.write("Please select an option")
-        with tab7:
-            st.write("Question 1 Text")
-            Question_5 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_5")
-            if Question_5 != " ":
-                st.write("Please select an option")
-        # Submit Button
+    with tab3:
         if st.button("Submit"):
             # Predict_Model(User_Tarrif_Selected,User_Group_Selected )
             if User_Tarrif_Selected != "" and User_Group_Selected != " ":
@@ -204,22 +166,114 @@ with st.container():
                 Show_Graph = True
                 st.success('Done, Plostting Graphis now.')
 
-    with Main_col_2:
-        if Show_Graph == True:
-            my_bar = st.progress(0)
-            for percent_complete in range(100):
-                time.sleep(0.1)
-            my_bar.progress(percent_complete + 1)
-            fig_1 = plt.figure(figsize=(15, 6))
-            sns.lineplot(x=forecast['ds'],y=forecast['yhat'],label='Forecast');
-            sns.lineplot(x=test_df['DateTime'],y=test_df['KWH/hh'],label='Actual');
-            fig_2 = figure(figsize=(15,6))
-            sns.lineplot(x=test_wd['DateTime'],y=test_wd['temperature'],label='Weather');
-            with st.spinner('Wait for it...'):
-                time.sleep(5)
-            st.success('Done!')
-            st.pyplot(fig_1)
-            st.pyplot(fig_2)
+with st.container():
+    if Show_Graph == True:
+        my_bar = st.progress(0)
+        for percent_complete in range(100):
+            time.sleep(0.1)
+        my_bar.progress(percent_complete + 1)
+        fig_1 = plt.figure(figsize=(15, 6))
+        sns.lineplot(x=forecast['ds'],y=forecast['yhat'],label='Forecast');
+        sns.lineplot(x=test_df['DateTime'],y=test_df['KWH/hh'],label='Actual');
+        fig_2 = figure(figsize=(15,6))
+        sns.lineplot(x=test_wd['DateTime'],y=test_wd['temperature'],label='Weather');
+        with st.spinner('Wait for it...'):
+            time.sleep(5)
+        st.success('Done!')
+        st.pyplot(fig_1)
+        st.pyplot(fig_2)
+# ---| MAIN SECTION |--->>>>
+
+# with st.container():
+#     st.write("---")
+#     Main_col_1, Main_col_2 = st.columns((2,4))
+#     with Main_col_1:
+#         # Insert containers separated into tabs:
+#         tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["First Question", "Second Question", "Third Question", "Fourth Question", "Fifth Question", "Sixth Question", "Seventh Question"])
+#         with tab1:
+#             st.write("Please Select your Tarrif Type")
+#             User_Tarrif_Selected = st.selectbox('Pick one', ["","Fixed Tarrif", "Variable Tarrif"])
+#             if User_Tarrif_Selected == "Fixed Tarrif":
+#                 User_Tarrif = "Std"
+#                 st.write("You have selected Fixed Tarrif")
+#             elif User_Tarrif_Selected == "Variable Tarrif":
+#                 User_Tarrif = "ToU"
+#                 st.write("You have selected Variable Tarrif")
+#             else:
+#                 st.write("Please select a tarrif")
+
+#         with tab2:
+#             st.write("Please Select your Group Type")
+#             User_Group_Selected = st.selectbox('Pick one', [" ","A","E","Q"])
+
+#         with tab3:
+#             st.write("Question 1 Text")
+#             Question_1 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_1")
+#             if Question_1 != " ":
+#                 st.write("Please select an option")
+
+#         with tab4:
+#             st.write("Question 1 Text")
+#             Question_2 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_2")
+#             if Question_2 != " ":
+#                 st.write("Please select an option")
+#         with tab5:
+#             st.write("Question 1 Text")
+#             Question_3 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_3")
+#             if Question_3 != " ":
+#                 st.write("Please select an option")
+#         with tab6:
+#             st.write("Question 1 Text")
+#             Question_4 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_4")
+
+#             if Question_4 != " ":
+#                 st.write("Please select an option")
+#         with tab7:
+#             st.write("Question 1 Text")
+#             Question_5 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_5")
+#             if Question_5 != " ":
+#                 st.write("Please select an option")
+        # Submit Button
+    #     if st.button("Submit"):
+    #         # Predict_Model(User_Tarrif_Selected,User_Group_Selected )
+    #         if User_Tarrif_Selected != "" and User_Group_Selected != " ":
+    #             with st.spinner('Calling the model'):
+    #                 time.sleep(5)
+    #             st.success('Good so far')
+    #             name = User_Group_Selected
+    #             tariff = User_Tarrif
+    #             # ---| IMPORT JOBLIT MODEL |--->>>>
+    #             filename = f'Team_Energy/model_{name}_{tariff}.joblib'
+    #             m = joblib.load(filename)
+    #             with st.spinner('Spinning up the Hard Drives'):
+    #                 time.sleep(5)
+    #             st.success('All Working Well')
+    #             # ---| PREDICTING |--->>>>
+    #             m = joblib.load(filename)
+    #             with st.spinner('Last Part! This can take a second or two'):
+    #                 time.sleep(5)
+    #             train_df, test_df = create_data(name = name, tariff = tariff)
+    #             train_wd, test_wd = get_weather(train_df, test_df)
+    #             forecast = forecast_model(m,train_wd,test_wd,add_weather=True)
+    #             Show_Graph = True
+    #             st.success('Done, Plostting Graphis now.')
+
+    # with Main_col_2:
+    #     if Show_Graph == True:
+    #         my_bar = st.progress(0)
+    #         for percent_complete in range(100):
+    #             time.sleep(0.1)
+    #         my_bar.progress(percent_complete + 1)
+    #         fig_1 = plt.figure(figsize=(15, 6))
+    #         sns.lineplot(x=forecast['ds'],y=forecast['yhat'],label='Forecast');
+    #         sns.lineplot(x=test_df['DateTime'],y=test_df['KWH/hh'],label='Actual');
+    #         fig_2 = figure(figsize=(15,6))
+    #         sns.lineplot(x=test_wd['DateTime'],y=test_wd['temperature'],label='Weather');
+    #         with st.spinner('Wait for it...'):
+    #             time.sleep(5)
+    #         st.success('Done!')
+    #         st.pyplot(fig_1)
+    #         st.pyplot(fig_2)
 # ---| FOOTER SECTION|--->>>>
 with st.container():
     st.write("---")
