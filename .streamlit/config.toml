@@ -16,3 +16,6 @@ textColor="#262730"
 # Accepted values (serif | sans serif | monospace)
 # Default: "sans serif"
 font="sans serif"
+
+[runner]
+magicEnabled = false
