@@ -16,7 +16,7 @@ from multiprocessing.sharedctypes import Value
 from pickle import FALSE
 import requests # Allows use of URL imports
 import streamlit as st # Allows compatibility with Streamlit
-from streamlit_lottie import st_lottie # Allows lottie animation
+# from streamlit_lottie import st_lottie # Allows lottie animation
 from PIL import Image # Image manipulation
 # ---| DATASCIANCE LIBRARIES |--->>>>
 import plotly as py
@@ -32,7 +32,7 @@ import time
 # ---| VERIABLES |--->>>>
 API_MODE = False
 Show_Graph = False
-Lottie_off = False
+Lottie_off = True
 User_Group_Selected = 0
 # ---| API ON/OFF DEPENDENT LIBRARIES |--->>>>
 if API_MODE == False:
