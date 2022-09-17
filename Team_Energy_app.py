@@ -5,7 +5,7 @@
 # |--------| Page Into Text                             |
 # |--------| My Pic | MY Work Experience | My Education |
 # |--------| ------------------------------------------ |
-# |--------| My Skills | My Interests | My Contact Info |
+# |--------|                                            |
 # |--------| ------------------------------------------ |
 # |--------| Footer                                     |
 # |--------| ------------------------------------------ |
@@ -16,7 +16,7 @@ from multiprocessing.sharedctypes import Value
 from pickle import FALSE
 import requests # Allows use of URL imports
 import streamlit as st # Allows compatibility with Streamlit
-from streamlit_lottie import st_lottie # Allows lottie animation
+# from streamlit_lottie import st_lottie # Allows lottie animation
 from PIL import Image # Image manipulation
 # ---| DATASCIANCE LIBRARIES |--->>>>
 import plotly as py
@@ -32,7 +32,7 @@ import time
 # ---| VERIABLES |--->>>>
 API_MODE = False
 Show_Graph = False
-Lottie_off = False
+Lottie_off = True
 User_Group_Selected = 0
 # ---| API ON/OFF DEPENDENT LIBRARIES |--->>>>
 if API_MODE == False:
@@ -258,11 +258,10 @@ with st.container():
         st.pyplot(fig_1)
         st.pyplot(fig_2)
 # ---| PLOTLY GRAPH |--->>>>
-        fig_py_1 = px.line(forecast, x="ds", y="yhat", title='test')
-        fig_py_3 = px.line(test_wd, x="DateTime", y="temperature", title='test')
+        fig_py_1 = px.line(forecast, x="ds", y="yhat", title='Forecast')
+        fig_py_3 = px.line(test_wd, x="DateTime", y="temperature", title='Weather')
         st.plotly_chart(fig_py_1)
         st.plotly_chart(fig_py_3)
-
 # ---| FOOTER SECTION|--->>>>
 with st.container():
     st.write("---")
@@ -270,8 +269,8 @@ with st.container():
     with Flooter_col_1:
         st.subheader("The Team")
         st.write("This app was created by the Team Energy. The Team Energy is a group of 4 students from Le Wagon Data Science Bootcamp. The Team Energy is made up of the following members:")
-    with Flooter_col_2:
-        st_lottie(Team_Lottie_Animation, speed=1, key="i")
+    # with Flooter_col_2:
+    #     st_lottie(Team_Lottie_Animation, speed=1, key="i")
     with Flooter_col_3:
         st.write("Zenan Ahmed")
         st.write("[ZenanAH](https://github.com/ZenanAH)")
