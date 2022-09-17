@@ -8,16 +8,15 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import figure
 
-print('input name')
-name = input()
-print('input tariff: Std or ToU')
-tariff = input()
+# print('input name')
+# name = input()
+# print('input tariff: Std or ToU')
+# tariff = input()
 
-# Joblib import model
-filename = f'model_{name}_{tariff}.joblib'
-m = joblib.load(filename)
-print('model loaded succcessfully')
-
+# # Joblib import model
+# filename = f'model_{name}_{tariff}.joblib'
+# m = joblib.load(filename)
+# print('model loaded succcessfully')
 
 # Predict
 def forecast_model(m,train_wd,test_wd,add_weather=False):
@@ -37,18 +36,18 @@ def evaluate(actual,forecast):
     return np.round(mean_absolute_percentage_error(actual,forecast),4)
 
 # Plot
-def plot_graphs(test_df, forecast):
-    figure(figsize=(15,6))
-    sns.lineplot(x=forecast['ds'],y=forecast['yhat'],label='Forecast');
-    sns.lineplot(x=test_df['DateTime'],y=test_df['KWH/hh'],label='Actual');
-    figure(figsize=(15,6))
-    sns.lineplot(x=test_wd['DateTime'],y=test_wd['temperature'],label='Weather');
+# def plot_graphs(test_df, forecast):
+#     figure(figsize=(15,6))
+#     sns.lineplot(x=forecast['ds'],y=forecast['yhat'],label='Forecast');
+#     sns.lineplot(x=test_df['DateTime'],y=test_df['KWH/hh'],label='Actual');
+#     figure(figsize=(15,6))
+#     sns.lineplot(x=test_wd['DateTime'],y=test_wd['temperature'],label='Weather');
 
 
 if __name__ == "__main__":
     # define df's using data.py
 
-    train_df, test_df = create_data(name = name, tariff = tariff)
+    train_df, test_df = create_data(name = 'name', tariff = 'tariff')
     train_wd, test_wd = get_weather(train_df, test_df)
     print('dataframes loaded')
     # Calculate forecast and MAPE
