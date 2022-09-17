@@ -33,6 +33,7 @@ import time
 API_MODE = False
 Show_Graph = False
 Lottie_off = False
+User_Group_Selected = 0
 # ---| API ON/OFF DEPENDENT LIBRARIES |--->>>>
 if API_MODE == False:
     from Team_Energy.predict  import *
@@ -68,22 +69,7 @@ def API_POST(url, data):
         return r.json()
     else:
         st.write("API Call is set to False, Please Enable API Call")
-# ---| CALLING PREDICT MODEL |--->>>>
-def Predict_Model(User_Tarrif_Selected,User_Group_Selected ):
-    if User_Tarrif_Selected != "" and User_Group_Selected != " ":
-            st.write("Model will be called here")
-            name = User_Group_Selected
-            tariff = User_Tarrif
-            # ---| IMPORT JOBLIT MODEL |--->>>>
-            filename = f'Team_Energy/model_{name}_{tariff}.joblib'
-            m = joblib.load(filename)
-            st.write("model loaded succcessfully")
-            # ---| PREDICTING |--->>>>
-            train_df, test_df = create_data(name = name, tariff = tariff)
-            train_wd, test_wd = get_weather(train_df, test_df)
-            forecast = forecast_model(m,train_wd,test_wd,add_weather=True)
-    else :
-        st.write("Please Select both a Tarrif and Group")
+
 # ---| SEABORN PLOT FUNCTIONS |--->>>>
 def seabon_line_plot(x, y, title, xlabel, ylabel, hue=None):
     fig_01, ax = plt.subplots(figsize=(10, 6))
@@ -104,6 +90,7 @@ def seabon_bar_plot(df, x, y, title, xlabel, ylabel, hue=None):
 def plotly_line_plot(df, x, y, title, xlabel, ylabel, hue=None):
     fig_03 = py.line(df, x=x, y=y, title=title, labels={x:xlabel, y:ylabel}, color=hue)
     st.plotly_chart(fig_03)
+
 # ---| IMPORTING LOTTIE ASSEST |---
 if Lottie_off == False:
     lottie_coding_Data_Science_Animation = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_xl3sktpc.json")
@@ -113,6 +100,8 @@ if Lottie_off == False:
 # ---| SIDE BAR |--->>>>
 with st.sidebar:
     st.title("Streamlit App")
+
+# st.download_button('Downoload your data', data, file_name=None, mime=None, key=None, help=None, on_click=None, args=None, kwargs=None, *, disabled=False)
 
 # lineplot = st.sidebar.selectbox("Select Plot Type", ["Line Plot", "Bar Plot", "Line Plot with Plotly"])
 # ---| Questions |--->>>>
@@ -149,7 +138,26 @@ def questions(Q1, Q2, Q3, Q4):
         User_Group_Selected = 'Q'
     return User_Group_Selected
 
-
+@st.experimental_memo
+def Mode_Predict_Run(User_Tarrif_Selected, User_Group_Selected):
+    name = User_Group_Selected
+    tariff = User_Tarrif_Selected
+    # ---| IMPORT JOBLIT MODEL |--->>>>
+    filename = f'Team_Energy/model_{name}_{tariff}.joblib'
+    m = joblib.load(filename)
+    with st.spinner('Spinning up the Hard Drives'):
+        time.sleep(5)
+    st.success('All Working Well')
+        # ---| PREDICTING |--->>>>
+    m = joblib.load(filename)
+    with st.spinner('Last Part! This can take a second or two'):
+        time.sleep(5)
+    train_df, test_df = create_data(name = name, tariff = tariff)
+    train_wd, test_wd = get_weather(train_df, test_df)
+    forecast = forecast_model(m,train_wd,test_wd,add_weather=True)
+    Show_Graph = True
+    st.success('Done, Plostting Graphis now.')
+    return forecast, Show_Graph
 # ---| HEADER SECTION |--->>>>
 with st.container():
     Header_col_1, Header_col_2, Header_col_3, Header_col_4 = st.columns(4)
@@ -171,35 +179,15 @@ with st.container():
         st.write("get started")
     with tab1:
         st.write("Please Select your Tarrif Type")
-        User_Tarrif_Selected = st.selectbox('Pick one', ["","Std", "Variable Tarrif"])
-        if User_Tarrif_Selected != "":
+        User_Tarrif_Selected = st.selectbox('Pick one', ["","Fixed Tarrif", "Variable Tarrif"])
+        if User_Tarrif_Selected == "Fixed Tarrif":
+            User_Tarrif_Selected = "Std"
+            st.write("You have selected Fixed Tarrif")
+        elif User_Tarrif_Selected == "Variable Tarrif":
+            User_Tarrif_Selected = "ToU"
+            st.write("You have selected Variable Tarrif")
+        else:
             st.warning("Please select a tarrif")
-
-#             st.write("Please Select your Tarrif Type")
-#             User_Tarrif_Selected = st.selectbox('Pick one', ["","Fixed Tarrif", "Variable Tarrif"])
-#             if User_Tarrif_Selected == "Fixed Tarrif":
-#                 User_Tarrif = "Std"
-#                 st.write("You have selected Fixed Tarrif")
-#             elif User_Tarrif_Selected == "Variable Tarrif":
-#                 User_Tarrif = "ToU"
-#                 st.write("You have selected Variable Tarrif")
-#             else:
-#                 st.write("Please select a tarrif")
-
-        # else:
-        #     User_Tarrif_Selected = "Std"
-        #     st.write (f"You have selected {User_Tarrif} Tarrif")
-
-    #     with tab2:
-    #         st.write("Please Select your Group Type")
-    #         User_Group_Selected = st.selectbox('Pick one', [" ","A","E","Q"])
-    # with tab3:
-    #     st.empty()
-
-
-        # with tab2:
-        #     st.write("Please Select your Group Type")
-        #     User_Group_Selected = st.selectbox('Pick one', [" ","A","E","Q"])
 
         with tab3:
             st.write("What is your house type?")
@@ -225,69 +213,34 @@ with st.container():
 
         with tab7:
         # Submit Button
+            st.empty()
             if st.button("Submit"):
                 # Predict_Model(User_Tarrif_Selected,User_Group_Selected )
                 if User_Tarrif_Selected != "" and Question_1 != "" and Question_2 != "" and Question_3 != "" and Question_4 != "":
+                    User_Group_Selected = questions(Q1 = Question_1, Q2 = Question_2, Q3 = Question_3, Q4 = Question_4)
+                    # forecast = Mode_Predict_Run(User_Tarrif_Selected = User_Tarrif_Selected,User_Group_Selected = User_Group_Selected)
+
                     with st.spinner('Calling the model'):
                         time.sleep(5)
-                    st.success('Good so far')
-
-                    User_Group_Selected = questions(Q1 = Question_1, Q2 = Question_2, Q3 = Question_3, Q4 = Question_4)
-                    name = User_Group_Selected
-                    tariff = User_Tarrif_Selected
-                    # ---| IMPORT JOBLIT MODEL |--->>>>
-                    filename = f'Team_Energy/model_{name}_{tariff}.joblib'
-                    m = joblib.load(filename)
-                    with st.spinner('Spinning up the Hard Drives'):
-                        time.sleep(5)
-                    st.success('All Working Well')
-                    # ---| PREDICTING |--->>>>
-                    m = joblib.load(filename)
-                    with st.spinner('Last Part! This can take a second or two'):
-                        time.sleep(5)
-                    train_df, test_df = create_data(name = name, tariff = tariff)
-                    train_wd, test_wd = get_weather(train_df, test_df)
-                    forecast = forecast_model(m,train_wd,test_wd,add_weather=True)
-                    Show_Graph = True
-                    st.success('Done, Plostting Graphis now.')
-
-
-    # with Main_col_2:
-        # ---| PLOTTING |--->>>>
-        # while Show_Lode == True:
-        #     st_lottie(Loding_Animation, speed=1, height=200, key="Loding_Animation")
-
-    #     # ---| PLOTTING |--->>>>
-    #     while Show_Lode == True:
-    #         st_lottie(Loding_Animation, speed=1, key="v")
-
-#     with Main_col_2:
-#         if Show_Graph == True:
-#             fig_1 = plt.figure(figsize=(15, 6))
-#             sns.lineplot(x=forecast['ds'],y=forecast['yhat'],label='Forecast');
-#             sns.lineplot(x=test_df['DateTime'],y=test_df['KWH/hh'],label='Actual');
-#             fig_2 = figure(figsize=(15,6))
-#             sns.lineplot(x=test_wd['DateTime'],y=test_wd['temperature'],label='Weather');
-#             st.pyplot(fig_1)
-#             st.pyplot(fig_2)
-
-# with st.container():
-#     Main_col_1, Main_col_2 = st.columns((2,4))
-#     with Main_col_1:
-#         # Insert containers separated into tabs:
-#         tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["First Question", "Second Question", "Third Question", "Fourth Question", "Fifth Question", "Sixth Question", "Seventh Question"])
-#         with tab1:
-#             st.write("Please Select your Tarrif Type")
-#             User_Tarrif_Selected = st.selectbox('Pick one', ["","Fixed Tarrif", "Variable Tarrif"])
-#             if User_Tarrif_Selected == "Fixed Tarrif":
-#                 User_Tarrif = "Std"
-#                 st.write("You have selected Fixed Tarrif")
-#             elif User_Tarrif_Selected == "Variable Tarrif":
-#                 User_Tarrif = "ToU"
-#                 st.write("You have selected Variable Tarrif")
-#             else:
-#                 st.write("Please select a tarrif")
-
+                        st.success('Good so far')
+                        # User_Group_Selected = questions(Q1 = Question_1, Q2 = Question_2, Q3 = Question_3, Q4 = Question_4)
+                        name = User_Group_Selected
+                        tariff = User_Tarrif_Selected
+                        # ---| IMPORT JOBLIT MODEL |--->>>>
+                        filename = f'Team_Energy/model_{name}_{tariff}.joblib'
+                        m = joblib.load(filename)
+                        with st.spinner('Spinning up the Hard Drives'):
+                            time.sleep(5)
+                        st.success('All Working Well')
+                        # ---| PREDICTING |--->>>>
+                        m = joblib.load(filename)
+                        with st.spinner('Last Part! This can take a second or two'):
+                            time.sleep(5)
+                        train_df, test_df = create_data(name = name, tariff = tariff)
+                        train_wd, test_wd = get_weather(train_df, test_df)
+                        forecast = forecast_model(m,train_wd,test_wd,add_weather=True)
+                        Show_Graph = True
+                        st.success('Done, Plotting Graphs now.')
 with st.container():
     if Show_Graph == True:
         my_bar = st.progress(0)
@@ -304,106 +257,12 @@ with st.container():
         st.success('Done!')
         st.pyplot(fig_1)
         st.pyplot(fig_2)
-# ---| MAIN SECTION |--->>>>
+# ---| PLOTLY GRAPH |--->>>>
+        fig_py_1 = px.line(forecast, x="ds", y="yhat", title='test')
+        fig_py_3 = px.line(test_wd, x="DateTime", y="temperature", title='test')
+        st.plotly_chart(fig_py_1)
+        st.plotly_chart(fig_py_3)
 
-# with st.container():
-#     st.write("---")
-#     Main_col_1, Main_col_2 = st.columns((2,4))
-#     with Main_col_1:
-#         # Insert containers separated into tabs:
-#         tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["First Question", "Second Question", "Third Question", "Fourth Question", "Fifth Question", "Sixth Question", "Seventh Question"])
-#         with tab1:
-#             st.write("Please Select your Tarrif Type")
-#             User_Tarrif_Selected = st.selectbox('Pick one', ["","Fixed Tarrif", "Variable Tarrif"])
-#             if User_Tarrif_Selected == "Fixed Tarrif":
-#                 User_Tarrif = "Std"
-#                 st.write("You have selected Fixed Tarrif")
-#             elif User_Tarrif_Selected == "Variable Tarrif":
-#                 User_Tarrif = "ToU"
-#                 st.write("You have selected Variable Tarrif")
-#             else:
-#                 st.write("Please select a tarrif")
-
-#         with tab2:
-#             st.write("Please Select your Group Type")
-#             User_Group_Selected = st.selectbox('Pick one', [" ","A","E","Q"])
-
-#         with tab3:
-#             st.write("Question 1 Text")
-#             Question_1 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_1")
-#             if Question_1 != " ":
-#                 st.write("Please select an option")
-# --------------------------------------------------------------------------------
-            # st_fig.update_layout(
-            #     title='Line Plot',
-            #     xaxis_title='X axis',
-            #     yaxis_title='Y axis'
-            #     )
-            # #st_fig.show()
-            # st.plotly_chart(st_fig, use_container_width= True)
-# --------------------------------------------------------------------------------
-#         with tab4:
-#             st.write("Question 1 Text")
-#             Question_2 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_2")
-#             if Question_2 != " ":
-#                 st.write("Please select an option")
-#         with tab5:
-#             st.write("Question 1 Text")
-#             Question_3 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_3")
-#             if Question_3 != " ":
-#                 st.write("Please select an option")
-#         with tab6:
-#             st.write("Question 1 Text")
-#             Question_4 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_4")
-
-#             if Question_4 != " ":
-#                 st.write("Please select an option")
-#         with tab7:
-#             st.write("Question 1 Text")
-#             Question_5 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_5")
-#             if Question_5 != " ":
-#                 st.write("Please select an option")
-        # Submit Button
-    #     if st.button("Submit"):
-    #         # Predict_Model(User_Tarrif_Selected,User_Group_Selected )
-    #         if User_Tarrif_Selected != "" and User_Group_Selected != " ":
-    #             with st.spinner('Calling the model'):
-    #                 time.sleep(5)
-    #             st.success('Good so far')
-    #             name = User_Group_Selected
-    #             tariff = User_Tarrif
-    #             # ---| IMPORT JOBLIT MODEL |--->>>>
-    #             filename = f'Team_Energy/model_{name}_{tariff}.joblib'
-    #             m = joblib.load(filename)
-    #             with st.spinner('Spinning up the Hard Drives'):
-    #                 time.sleep(5)
-    #             st.success('All Working Well')
-    #             # ---| PREDICTING |--->>>>
-    #             m = joblib.load(filename)
-    #             with st.spinner('Last Part! This can take a second or two'):
-    #                 time.sleep(5)
-    #             train_df, test_df = create_data(name = name, tariff = tariff)
-    #             train_wd, test_wd = get_weather(train_df, test_df)
-    #             forecast = forecast_model(m,train_wd,test_wd,add_weather=True)
-    #             Show_Graph = True
-    #             st.success('Done, Plostting Graphis now.')
-
-    # with Main_col_2:
-    #     if Show_Graph == True:
-    #         my_bar = st.progress(0)
-    #         for percent_complete in range(100):
-    #             time.sleep(0.1)
-    #         my_bar.progress(percent_complete + 1)
-    #         fig_1 = plt.figure(figsize=(15, 6))
-    #         sns.lineplot(x=forecast['ds'],y=forecast['yhat'],label='Forecast');
-    #         sns.lineplot(x=test_df['DateTime'],y=test_df['KWH/hh'],label='Actual');
-    #         fig_2 = figure(figsize=(15,6))
-    #         sns.lineplot(x=test_wd['DateTime'],y=test_wd['temperature'],label='Weather');
-    #         with st.spinner('Wait for it...'):
-    #             time.sleep(5)
-    #         st.success('Done!')
-    #         st.pyplot(fig_1)
-    #         st.pyplot(fig_2)
 # ---| FOOTER SECTION|--->>>>
 with st.container():
     st.write("---")
