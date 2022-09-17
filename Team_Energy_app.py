@@ -19,9 +19,9 @@ import streamlit as st # Allows compatibility with Streamlit
 # from streamlit_lottie import st_lottie # Allows lottie animation
 from PIL import Image # Image manipulation
 # ---| DATASCIANCE LIBRARIES |--->>>>
-import plotly as py
-import plotly.express as px
-import plotly.graph_objects as go
+# import plotly as py
+# import plotly.express as px
+# import plotly.graph_objects as go
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
