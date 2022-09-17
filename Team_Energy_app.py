@@ -117,27 +117,27 @@ with st.sidebar:
 # lineplot = st.sidebar.selectbox("Select Plot Type", ["Line Plot", "Bar Plot", "Line Plot with Plotly"])
 # ---| Questions |--->>>>
 Q1dict = {
-  ""'Detached house' : 4,
-  "Flat or Maisonette": 0,
-  "Semi-detached house": 2,
-  "Terraced house": 0
+    ""'Detached house' : 4,
+    "Flat or Maisonette": 0,
+    "Semi-detached house": 2,
+    "Terraced house": 0
 }
 Q2dict = {""'Owned outright': 3,
-          'Mortgaged': 2,
-          'Shared/Equity Ownerhsip': 1,
-          'Privately Rented': 0,
-          'Social renting': 0
-          }
+    'Mortgaged': 2,
+    'Shared/Equity Ownerhsip': 1,
+    'Privately Rented': 0,
+    'Social renting': 0
+    }
 
 Q3dict = {""'1 bedroom': 0,
-          '2 bedrooms': 1,
-          '3 bedrooms': 2,
-          '4+ bedrooms': 4}
+    '2 bedrooms': 1,
+    '3 bedrooms': 2,
+    '4+ bedrooms': 4}
 
 Q4dict = {""'£0-£20,000':0,
-          '£20,000-£40,000': 1,
-          '£40,000-£60,000': 1,
-          '£80,000 +': 4}
+    '£20,000-£40,000': 1,
+    '£40,000-£60,000': 1,
+    '£80,000 +': 4}
 
 def questions(Q1, Q2, Q3, Q4):
     total_values = Q1dict[Q1] + Q2dict[Q2] + Q3dict[Q3] + Q4dict[Q4]
@@ -163,7 +163,7 @@ with st.container():
         st.empty()
 # ---| MAIN SECTION |--->>>>  Cleaned
 with st.container():
-    tab0, tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Intro","First Question", "Second Question","Qest 3","Qest 4","Qest 5","Qest 6","Submit"])
+    tab0, tab1, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Intro","First Question", "Second Question","Qest 3","Qest 4","Qest 5","Submit"])
     with tab0:
         st.write("This app will help you to predict your energy consumption")
         st.write("All you need to do is answer a few questions, sound good?")
@@ -171,17 +171,18 @@ with st.container():
         st.write("get started")
     with tab1:
         st.write("Please Select your Tarrif Type")
-        User_Tarrif_Selected = st.selectbox('Pick one', ["","Fixed Tarrif", "Variable Tarrif"])
-        if User_Tarrif_Selected != " ":
+        User_Tarrif_Selected = st.selectbox('Pick one', ["","Std", "Variable Tarrif"])
+        if User_Tarrif_Selected != "":
             st.warning("Please select a tarrif")
-        else:
-            User_Tarrif = User_Tarrif_Selected
-            st.write (f"You have selected {User_Tarrif} Tarrif")
-        with tab2:
-            st.write("Please Select your Group Type")
-            User_Group_Selected = st.selectbox('Pick one', [" ","A","E","Q"])
-    with tab3:
-        st.empty()
+        # else:
+        #     User_Tarrif_Selected = "Std"
+        #     st.write (f"You have selected {User_Tarrif} Tarrif")
+
+    #     with tab2:
+    #         st.write("Please Select your Group Type")
+    #         User_Group_Selected = st.selectbox('Pick one', [" ","A","E","Q"])
+    # with tab3:
+    #     st.empty()
 
 
         # with tab2:
@@ -211,40 +212,32 @@ with st.container():
             if Question_4 != " ":
                 st.write("Please select an option")
         with tab7:
-            st.write("Question 1 Text")
-            Question_5 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_5")
-            if Question_5 != " ":
-                st.write("Please select an option")
-
         # Submit Button
-        if st.button("Submit"):
-            # Predict_Model(User_Tarrif_Selected,User_Group_Selected )
-            if User_Tarrif_Selected != "" and User_Group_Selected != " ":
+            if st.button("Submit"):
+                # Predict_Model(User_Tarrif_Selected,User_Group_Selected )
+                if User_Tarrif_Selected != "" and Question_1 != "" and Question_2 != "" and Question_3 != "" and Question_4 != "":
+                    with st.spinner('Calling the model'):
+                        time.sleep(5)
+                    st.success('Good so far')
 
-                with st.spinner('Calling the model'):
-                    time.sleep(5)
-                st.success('Good so far')
-
-            if User_Tarrif_Selected != '' and User_Group_Selected != '':
-                st.write("Model will be called here")
-                User_Group_Selected = questions(Q1 = Question_1, Q2 = Question_2, Q3 = Question_3, Q4 = Question_4)
-                name = User_Group_Selected
-                tariff = User_Tarrif
-                # ---| IMPORT JOBLIT MODEL |--->>>>
-                filename = f'Team_Energy/model_{name}_{tariff}.joblib'
-                m = joblib.load(filename)
-                with st.spinner('Spinning up the Hard Drives'):
-                    time.sleep(5)
-                st.success('All Working Well')
-                # ---| PREDICTING |--->>>>
-                m = joblib.load(filename)
-                with st.spinner('Last Part! This can take a second or two'):
-                    time.sleep(5)
-                train_df, test_df = create_data(name = name, tariff = tariff)
-                train_wd, test_wd = get_weather(train_df, test_df)
-                forecast = forecast_model(m,train_wd,test_wd,add_weather=True)
-                Show_Graph = True
-                st.success('Done, Plostting Graphis now.')
+                    User_Group_Selected = questions(Q1 = Question_1, Q2 = Question_2, Q3 = Question_3, Q4 = Question_4)
+                    name = User_Group_Selected
+                    tariff = User_Tarrif_Selected
+                    # ---| IMPORT JOBLIT MODEL |--->>>>
+                    filename = f'Team_Energy/model_{name}_{tariff}.joblib'
+                    m = joblib.load(filename)
+                    with st.spinner('Spinning up the Hard Drives'):
+                        time.sleep(5)
+                    st.success('All Working Well')
+                    # ---| PREDICTING |--->>>>
+                    m = joblib.load(filename)
+                    with st.spinner('Last Part! This can take a second or two'):
+                        time.sleep(5)
+                    train_df, test_df = create_data(name = name, tariff = tariff)
+                    train_wd, test_wd = get_weather(train_df, test_df)
+                    forecast = forecast_model(m,train_wd,test_wd,add_weather=True)
+                    Show_Graph = True
+                    st.success('Done, Plostting Graphis now.')
 
 
     # with Main_col_2:
