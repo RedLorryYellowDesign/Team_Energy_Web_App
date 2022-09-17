@@ -16,7 +16,7 @@ from multiprocessing.sharedctypes import Value
 from pickle import FALSE
 import requests # Allows use of URL imports
 import streamlit as st # Allows compatibility with Streamlit
-# from streamlit_lottie import st_lottie # Allows lottie animation
+from streamlit_lottie import st_lottie # Allows lottie animation
 from PIL import Image # Image manipulation
 # ---| DATASCIANCE LIBRARIES |--->>>>
 import plotly as py
@@ -32,7 +32,7 @@ import time
 # ---| VERIABLES |--->>>>
 API_MODE = False
 Show_Graph = False
-Lottie_off = True
+Lottie_off = False
 User_Group_Selected = 0
 # ---| API ON/OFF DEPENDENT LIBRARIES |--->>>>
 if API_MODE == False:
@@ -91,6 +91,17 @@ def plotly_line_plot(df, x, y, title, xlabel, ylabel, hue=None):
     fig_03 = py.line(df, x=x, y=y, title=title, labels={x:xlabel, y:ylabel}, color=hue)
     st.plotly_chart(fig_03)
 
+
+def compute_accuracy(y_true, y_pred):
+    correct_predictions = 0
+    # iterate over each label and check
+    for true, predicted in zip(y_true, y_pred):
+        if true == predicted:
+            correct_predictions += 1
+    # compute the accuracy
+    accuracy = correct_predictions/len(y_true)
+    return accuracy
+
 # ---| IMPORTING LOTTIE ASSEST |---
 if Lottie_off == False:
     lottie_coding_Data_Science_Animation = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_xl3sktpc.json")
@@ -99,11 +110,10 @@ if Lottie_off == False:
 # ---| IMPORTING IMAGES |--->>>>
 # ---| SIDE BAR |--->>>>
 with st.sidebar:
-    st.title("Streamlit App")
+    st.image('Images/Team_Energy_Logo.png', width=200)
+    st.title("  By Team Energy")
 
 # st.download_button('Downoload your data', data, file_name=None, mime=None, key=None, help=None, on_click=None, args=None, kwargs=None, *, disabled=False)
-
-# lineplot = st.sidebar.selectbox("Select Plot Type", ["Line Plot", "Bar Plot", "Line Plot with Plotly"])
 # ---| Questions |--->>>>
 Q1dict = {
     ""'Detached house' : 4,
@@ -158,6 +168,7 @@ def Mode_Predict_Run(User_Tarrif_Selected, User_Group_Selected):
     Show_Graph = True
     st.success('Done, Plostting Graphis now.')
     return forecast, Show_Graph
+
 # ---| HEADER SECTION |--->>>>
 with st.container():
     Header_col_1, Header_col_2, Header_col_3, Header_col_4 = st.columns(4)
@@ -171,14 +182,14 @@ with st.container():
         st.empty()
 # ---| MAIN SECTION |--->>>>  Cleaned
 with st.container():
-    tab0, tab1, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Intro","Q1", "Q2","Q3","Q4","Q5","Submit"])
+    tab0, tab1, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Intro","Tarrif Type", "House Type","Home owner?","Number of Bedrooms","Household Income","Submit"])
     with tab0:
         st.write("This app will help you to predict your energy consumption")
         st.write("All you need to do is answer a few questions, sound good?")
         st.write("Let's get started. Just click on the next tab called Q1 to")
         st.write("get started")
     with tab1:
-        st.write("Please Select your Tarrif Type")
+        st.write("Please Select your Tarrif Type your currently on")
         User_Tarrif_Selected = st.selectbox('Pick one', ["","Fixed Tarrif", "Variable Tarrif"])
         if User_Tarrif_Selected == "Fixed Tarrif":
             User_Tarrif_Selected = "Std"
@@ -241,6 +252,7 @@ with st.container():
                         forecast = forecast_model(m,train_wd,test_wd,add_weather=True)
                         Show_Graph = True
                         st.success('Done, Plotting Graphs now.')
+                        compute_accuracy(forecast, train_df)
 with st.container():
     if Show_Graph == True:
         my_bar = st.progress(0)
@@ -258,8 +270,8 @@ with st.container():
         st.pyplot(fig_1)
         st.pyplot(fig_2)
 # ---| PLOTLY GRAPH |--->>>>
-        fig_py_1 = px.line(forecast, x="ds", y="yhat", title='Forecast')
-        fig_py_3 = px.line(test_wd, x="DateTime", y="temperature", title='Weather')
+        fig_py_1 = px.line(forecast, x="ds", y="yhat", title='Your Energy Consumption Over the next month')
+        fig_py_3 = px.line(test_wd, x="DateTime", y="temperature", title='How the weather will affect your energy consumption over the next month')
         st.plotly_chart(fig_py_1)
         st.plotly_chart(fig_py_3)
 # ---| FOOTER SECTION|--->>>>
@@ -269,8 +281,9 @@ with st.container():
     with Flooter_col_1:
         st.subheader("The Team")
         st.write("This app was created by the Team Energy. The Team Energy is a group of 4 students from Le Wagon Data Science Bootcamp. The Team Energy is made up of the following members:")
-    # with Flooter_col_2:
-    #     st_lottie(Team_Lottie_Animation, speed=1, key="i")
+    with Flooter_col_2:
+        if Lottie_off == False:
+            st_lottie (Team_Lottie_Animation, speed=2, key="i")
     with Flooter_col_3:
         st.write("Zenan Ahmed")
         st.write("[ZenanAH](https://github.com/ZenanAH)")
