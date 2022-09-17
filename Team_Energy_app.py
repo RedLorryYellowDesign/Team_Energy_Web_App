@@ -16,7 +16,7 @@ from multiprocessing.sharedctypes import Value
 from pickle import FALSE
 import requests # Allows use of URL imports
 import streamlit as st # Allows compatibility with Streamlit
-# from streamlit_lottie import st_lottie # Allows lottie animation
+from streamlit_lottie import st_lottie # Allows lottie animation
 from PIL import Image # Image manipulation
 # ---| DATASCIANCE LIBRARIES |--->>>>
 import plotly as py
@@ -32,7 +32,7 @@ import time
 # ---| VERIABLES |--->>>>
 API_MODE = False
 Show_Graph = False
-Lottie_off = True
+Lottie_off = False
 User_Group_Selected = 0
 # ---| API ON/OFF DEPENDENT LIBRARIES |--->>>>
 if API_MODE == False:
@@ -99,7 +99,8 @@ if Lottie_off == False:
 # ---| IMPORTING IMAGES |--->>>>
 # ---| SIDE BAR |--->>>>
 with st.sidebar:
-    st.title("Streamlit App")
+    st.image('Images/Team_Energy_Logo.png', width=200)
+    st.title("  By Team Energy")
 
 # st.download_button('Downoload your data', data, file_name=None, mime=None, key=None, help=None, on_click=None, args=None, kwargs=None, *, disabled=False)
 
@@ -269,8 +270,9 @@ with st.container():
     with Flooter_col_1:
         st.subheader("The Team")
         st.write("This app was created by the Team Energy. The Team Energy is a group of 4 students from Le Wagon Data Science Bootcamp. The Team Energy is made up of the following members:")
-    # with Flooter_col_2:
-    #     st_lottie(Team_Lottie_Animation, speed=1, key="i")
+    with Flooter_col_2:
+        if Lottie_off == False:
+            st_lottie(Team_Lottie_Animation, speed=1, key="i")
     with Flooter_col_3:
         st.write("Zenan Ahmed")
         st.write("[ZenanAH](https://github.com/ZenanAH)")
