@@ -16,7 +16,7 @@ numpy
 pandas
 scikit-learn
 pandas
-matplotlib.pyplot
+matplotlib
 # tests/linter
 black
 coverage
