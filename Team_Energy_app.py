@@ -284,7 +284,7 @@ with st.container():
         st.write("This app was created by the Team Energy. The Team Energy is a group of 4 students from Le Wagon Data Science Bootcamp. The Team Energy is made up of the following members:")
     with Flooter_col_2:
         if Lottie_off == False:
-            st_lottie(Team_Lottie_Animation, speed=1, key="i")
+           st_lottie (Team_Lottie_Animation, speed=1, key="i")
     with Flooter_col_3:
         st.write("Zenan Ahmed")
         st.write("[ZenanAH](https://github.com/ZenanAH)")
