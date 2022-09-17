@@ -16,7 +16,7 @@ from multiprocessing.sharedctypes import Value
 from pickle import FALSE
 import requests # Allows use of URL imports
 import streamlit as st # Allows compatibility with Streamlit
-from streamlit_lottie import st_lottie # Allows lottie animation
+# from streamlit_lottie import st_lottie # Allows lottie animation
 from PIL import Image # Image manipulation
 # ---| DATASCIANCE LIBRARIES |--->>>>
 import plotly as py
