@@ -163,7 +163,12 @@ with st.container():
         st.empty()
 # ---| MAIN SECTION |--->>>>  Cleaned
 with st.container():
-    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["First Question", "Second Question","Qest 3","Qest 4","Qest 5","Qest 6","Qest 7","Submit"])
+    tab0, tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Intro","First Question", "Second Question","Qest 3","Qest 4","Qest 5","Qest 6","Submit"])
+    with tab0:
+        st.write("This app will help you to predict your energy consumption")
+        st.write("All you need to do is answer a few questions, sound good?")
+        st.write("Let's get started. Just click on the next tab called Q1 to")
+        st.write("get started")
     with tab1:
         st.write("Please Select your Tarrif Type")
         User_Tarrif_Selected = st.selectbox('Pick one', ["","Fixed Tarrif", "Variable Tarrif"])
@@ -223,7 +228,6 @@ with st.container():
             if User_Tarrif_Selected != '' and User_Group_Selected != '':
                 st.write("Model will be called here")
                 User_Group_Selected = questions(Q1 = Question_1, Q2 = Question_2, Q3 = Question_3, Q4 = Question_4)
-
                 name = User_Group_Selected
                 tariff = User_Tarrif
                 # ---| IMPORT JOBLIT MODEL |--->>>>
