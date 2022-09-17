@@ -13,6 +13,7 @@
 # ---| ALL IMPORT LIBRARIES |--->>>>
 # ---| BASE STREAMLIT LIBRARIES |--->>>>
 from decimal import FloatOperation
+from multiprocessing.sharedctypes import Value
 from pickle import FALSE
 import requests # Allows use of URL imports
 import streamlit as st # Allows compatibility with Streamlit
@@ -28,10 +29,14 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import joblib
 import plotly.figure_factory as ff
-
+import time
+# ---| VERIABLES |--->>>>
+API_MODE = False
+Show_Graph = False
+Lottie_off = False
 # ---| API ON/OFF DEPENDENT LIBRARIES |--->>>>
 Show_Lode = False
-
+User_Group_Selected = 0
 API_MODE = False
 if API_MODE == False:
     from Team_Energy.predict  import *
@@ -106,7 +111,8 @@ def plotly_line_plot(df, x, y, title, xlabel, ylabel, hue=None):
     fig_03 = py.line(df, x=x, y=y, title=title, labels={x:xlabel, y:ylabel}, color=hue)
     st.plotly_chart(fig_03)
 # ---| IMPORTING LOTTIE ASSEST |---
-lottie_coding_Data_Science_Animation = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_xl3sktpc.json")
+if Lottie_off == False:
+    lottie_coding_Data_Science_Animation = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_xl3sktpc.json")
 Team_Lottie_Animation = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_vctzcozn.json")
 Loding_Animation = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_ibxFWH.json")
 # ---| IMPORTING IMAGES |--->>>>
@@ -116,16 +122,46 @@ with st.sidebar:
     st.title("Streamlit App")
 
 # lineplot = st.sidebar.selectbox("Select Plot Type", ["Line Plot", "Bar Plot", "Line Plot with Plotly"])
+# ---| Questions |--->>>>
+Q1dict = {
+  ""'Detached house' : 4,
+  "Flat or Maisonette": 0,
+  "Semi-detached house": 2,
+  "Terraced house": 0
+}
+Q2dict = {""'Owned outright': 3,
+          'Mortgaged': 2,
+          'Shared/Equity Ownerhsip': 1,
+          'Privately Rented': 0,
+          'Social renting': 0
+          }
+
+Q3dict = {""'1 bedroom': 0,
+          '2 bedrooms': 1,
+          '3 bedrooms': 2,
+          '4+ bedrooms': 4}
+
+Q4dict = {""'£0-£20,000':0,
+          '£20,000-£40,000': 1,
+          '£40,000-£60,000': 1,
+          '£80,000 +': 4}
+
+def questions(Q1, Q2, Q3, Q4):
+    total_values = Q1dict[Q1] + Q2dict[Q2] + Q3dict[Q3] + Q4dict[Q4]
+    if total_values > 10:
+        User_Group_Selected = 'A'
+    elif total_values in range(5,9):
+        User_Group_Selected = 'H'
+    elif total_values < 5:
+        User_Group_Selected = 'Q'
+    return User_Group_Selected
 
 
 # ---| HEADER SECTION |--->>>>
 with st.container():
     Header_col_1, Header_col_2, Header_col_3, Header_col_4 = st.columns(4)
     with Header_col_1:
-        st.title("Streamlit App")
-        st.subheader("This is a Test web app for LeWagon Team Energy")
-        st.write("This is a test app for LeWagon Team Energy to test Streamlit")
-        st.write("[Le Wagon Home Page](https://www.lewagon.com)")
+        st.title("Energy.app")
     with Header_col_2:
         st.empty()
     with Header_col_3:
@@ -152,24 +188,64 @@ with st.container():
 
 
         with tab3:
+            tab0, tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Intro","First Question", "Second Question","Qest 3","Qest 4","Qest 5","Qest 6","Submit"])
+    with tab0:
+        st.write("This app will help you to predict your energy consumption")
+        st.write("All you need to do is answer a few questions, sound good?")
+        st.write("Let's get started. Just click on the next tab called Q1 to")
+        st.write("get started")
+    with tab1:
+        st.write("Please Select your Tarrif Type")
+        User_Tarrif_Selected = st.selectbox('Pick one', ["","Fixed Tarrif", "Variable Tarrif"])
+        if User_Tarrif_Selected != " ":
+            st.warning("Please select a tarrif")
+        else:
+            User_Tarrif = User_Tarrif_Selected
+            st.write (f"You have selected {User_Tarrif} Tarrif")
+        with tab2:
+            st.write("Please Select your Group Type")
+            User_Group_Selected = st.selectbox('Pick one', [" ","A","E","Q"])
+
+        with tab3:
+            st.write("What is your house type?")
+            Question_1 = st.selectbox('Pick one', ['Detached house', "Flat or Maisonette", "Semi-detached house","Terraced house"], key="Question_1")
             if Question_1 != " ":
                 st.write("Please select an option")
 
         with tab4:
+            st.write("What is your property ownership status?")
+            Question_2 = st.selectbox('Pick one', ['Owned outright', 'Mortgaged', 'Shared/Equity Ownerhsip','Privately Rented', 'Social renting'], key="Question_2")
             if Question_2 != " ":
                 st.write("Please select an option")
         with tab5:
+            st.write("How many Bedrooms does your house have?")
+            Question_3 = st.selectbox('Pick one', ['1 bedroom', '2 bedrooms', '3 bedrooms', '4+ bedrooms'], key="Question_3")
             if Question_3 != " ":
                 st.write("Please select an option")
         with tab6:
+            st.write("What is your estimated household income?")
+            Question_4 = st.selectbox('Pick one', ['£0-£20,000', '£20,000-£40,000','£40,000-£60,000','£80,000 +'], key="Question_4")
 
             if Question_4 != " ":
+                st.write("Please select an option")
+        with tab7:
+            st.write("Question 1 Text")
+            Question_5 = st.selectbox('Pick one', [" ","A","E","Q"], key="Question_5")
+            if Question_5 != " ":
                 st.write("Please select an option")
 
         # Submit Button
         if st.button("Submit"):
             # Predict_Model(User_Tarrif_Selected,User_Group_Selected )
+            if User_Tarrif_Selected != "" and User_Group_Selected != " ":
+
+                with st.spinner('Calling the model'):
+                    time.sleep(5)
+                st.success('Good so far')
+
+            if User_Tarrif_Selected != '' and User_Group_Selected != '':
                 st.write("Model will be called here")
+                User_Group_Selected = questions(Q1 = Question_1, Q2 = Question_2, Q3 = Question_3, Q4 = Question_4)
                 name = User_Group_Selected
                 tariff = User_Tarrif
                 # ---| IMPORT JOBLIT MODEL |--->>>>
@@ -182,37 +258,55 @@ with st.container():
                 forecast = forecast_model(m,train_wd,test_wd,add_weather=True)
                 Show_Graph = True
                 Show_Lode = True
+    with Main_col_2:
+        # ---| PLOTTING |--->>>>
+        while Show_Lode == True:
+            st_lottie(Loding_Animation, speed=1, key="v")
+
     # with Main_col_2:
         # ---| PLOTTING |--->>>>
         # while Show_Lode == True:
         #     st_lottie(Loding_Animation, speed=1, height=200, key="Loding_Animation")
-    with Main_col_2:
-        if Show_Graph == True:
-            fig_1 = plt.figure(figsize=(15, 6))
-            sns.lineplot(x=forecast['ds'],y=forecast['yhat'],label='Forecast');
-            sns.lineplot(x=test_df['DateTime'],y=test_df['KWH/hh'],label='Actual');
-            fig_2 = figure(figsize=(15,6))
-            sns.lineplot(x=test_wd['DateTime'],y=test_wd['temperature'],label='Weather');
-            st.pyplot(fig_1)
-            st.pyplot(fig_2)
+    #     # ---| PLOTTING |--->>>>
+    #     while Show_Lode == True:
+    #         st_lottie(Loding_Animation, speed=1, key="v")
+# >>>>>>> Stashed changes
+# >>>>>>> Stashed changes
+#     with Main_col_2:
+#         if Show_Graph == True:
+#             fig_1 = plt.figure(figsize=(15, 6))
+#             sns.lineplot(x=forecast['ds'],y=forecast['yhat'],label='Forecast');
+#             sns.lineplot(x=test_df['DateTime'],y=test_df['KWH/hh'],label='Actual');
+#             fig_2 = figure(figsize=(15,6))
+#             sns.lineplot(x=test_wd['DateTime'],y=test_wd['temperature'],label='Weather');
+#             st.pyplot(fig_1)
+#             st.pyplot(fig_2)
 
-            x_axis = np.linspace(0, 1, 100)
-            y_axis = np.random.randn(100) - 5
+#             x_axis = np.linspace(0, 1, 100)
+#             y_axis = np.random.randn(100) - 5
 
-            st_fig = go.Figure()
-            obj = go.Scatter(
-                x = x_axis,
-                y = y_axis,
-                line = dict(color='firebrick', width=4)
-            )
-            st_fig.add_trace(obj)
+#             st_fig = go.Figure()
+#             obj = go.Scatter(
+#                 x = x_axis,
+#                 y = y_axis,
+#                 line = dict(color='firebrick', width=4)
+#             )
 
-            st_fig.update_layout(
-                title='Line Plot',
-                xaxis_title='X axis',
-                yaxis_title='Y axis'
-                )
-            Show_Lode = False
+#             st_fig.add_trace(obj)
+
+#             st_fig.update_layout(
+#                 title='Line Plot',
+#                 xaxis_title='X axis',
+#                 yaxis_title='Y axis'
+#                 )
+#             Show_Lode = False
+# <<<<<<< Updated upstream
+#             st_fig.show()
+#             st.plotly_chart(st_fig)
+# =======
+#             #st_fig.show()
+#             st.plotly_chart(st_fig, use_container_width= True)
+# >>>>>>> Stashed changes
 
             # Plotly_Graph = go.Figure()
             # fig_43 = px.line(
