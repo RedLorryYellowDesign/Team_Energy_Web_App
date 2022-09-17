@@ -163,7 +163,7 @@ with st.container():
         st.empty()
 # ---| MAIN SECTION |--->>>>  Cleaned
 with st.container():
-    tab0, tab1, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Intro","First Question", "Second Question","Qest 3","Qest 4","Qest 5","Submit"])
+    tab0, tab1, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Intro","Q1", "Q2","Q3","Q4","Q5","Submit"])
     with tab0:
         st.write("This app will help you to predict your energy consumption")
         st.write("All you need to do is answer a few questions, sound good?")
@@ -174,6 +174,18 @@ with st.container():
         User_Tarrif_Selected = st.selectbox('Pick one', ["","Std", "Variable Tarrif"])
         if User_Tarrif_Selected != "":
             st.warning("Please select a tarrif")
+
+#             st.write("Please Select your Tarrif Type")
+#             User_Tarrif_Selected = st.selectbox('Pick one', ["","Fixed Tarrif", "Variable Tarrif"])
+#             if User_Tarrif_Selected == "Fixed Tarrif":
+#                 User_Tarrif = "Std"
+#                 st.write("You have selected Fixed Tarrif")
+#             elif User_Tarrif_Selected == "Variable Tarrif":
+#                 User_Tarrif = "ToU"
+#                 st.write("You have selected Variable Tarrif")
+#             else:
+#                 st.write("Please select a tarrif")
+
         # else:
         #     User_Tarrif_Selected = "Std"
         #     st.write (f"You have selected {User_Tarrif} Tarrif")
@@ -191,26 +203,26 @@ with st.container():
 
         with tab3:
             st.write("What is your house type?")
-            Question_1 = st.selectbox('Pick one', ['Detached house', "Flat or Maisonette", "Semi-detached house","Terraced house"], key="Question_1")
+            Question_1 = st.selectbox('Pick one', ["",'Detached house', "Flat or Maisonette", "Semi-detached house","Terraced house"], key="Question_1")
             if Question_1 != " ":
                 st.write("Please select an option")
 
         with tab4:
             st.write("What is your property ownership status?")
-            Question_2 = st.selectbox('Pick one', ['Owned outright', 'Mortgaged', 'Shared/Equity Ownerhsip','Privately Rented', 'Social renting'], key="Question_2")
+            Question_2 = st.selectbox('Pick one', ["",'Owned outright', 'Mortgaged', 'Shared/Equity Ownerhsip','Privately Rented', 'Social renting'], key="Question_2")
             if Question_2 != " ":
                 st.write("Please select an option")
         with tab5:
             st.write("How many Bedrooms does your house have?")
-            Question_3 = st.selectbox('Pick one', ['1 bedroom', '2 bedrooms', '3 bedrooms', '4+ bedrooms'], key="Question_3")
+            Question_3 = st.selectbox('Pick one', ["",'1 bedroom', '2 bedrooms', '3 bedrooms', '4+ bedrooms'], key="Question_3")
             if Question_3 != " ":
                 st.write("Please select an option")
         with tab6:
             st.write("What is your estimated household income?")
-            Question_4 = st.selectbox('Pick one', ['£0-£20,000', '£20,000-£40,000','£40,000-£60,000','£80,000 +'], key="Question_4")
-
+            Question_4 = st.selectbox('Pick one', ["",'£0-£20,000', '£20,000-£40,000','£40,000-£60,000','£80,000 +'], key="Question_4")
             if Question_4 != " ":
                 st.write("Please select an option")
+
         with tab7:
         # Submit Button
             if st.button("Submit"):
