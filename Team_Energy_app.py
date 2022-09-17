@@ -16,12 +16,12 @@ from multiprocessing.sharedctypes import Value
 from pickle import FALSE
 import requests # Allows use of URL imports
 import streamlit as st # Allows compatibility with Streamlit
-# from streamlit_lottie import st_lottie # Allows lottie animation
+from streamlit_lottie import st_lottie # Allows lottie animation
 from PIL import Image # Image manipulation
 # ---| DATASCIANCE LIBRARIES |--->>>>
-# import plotly as py
-# import plotly.express as px
-# import plotly.graph_objects as go
+import plotly as py
+import plotly.express as px
+import plotly.graph_objects as go
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -90,6 +90,17 @@ def seabon_bar_plot(df, x, y, title, xlabel, ylabel, hue=None):
 def plotly_line_plot(df, x, y, title, xlabel, ylabel, hue=None):
     fig_03 = py.line(df, x=x, y=y, title=title, labels={x:xlabel, y:ylabel}, color=hue)
     st.plotly_chart(fig_03)
+
+
+def compute_accuracy(y_true, y_pred):
+    correct_predictions = 0
+    # iterate over each label and check
+    for true, predicted in zip(y_true, y_pred):
+        if true == predicted:
+            correct_predictions += 1
+    # compute the accuracy
+    accuracy = correct_predictions/len(y_true)
+    return accuracy
 
 # ---| IMPORTING LOTTIE ASSEST |---
 if Lottie_off == False:
@@ -242,6 +253,7 @@ with st.container():
                         forecast = forecast_model(m,train_wd,test_wd,add_weather=True)
                         Show_Graph = True
                         st.success('Done, Plotting Graphs now.')
+                        compute_accuracy(forecast, train_df)
 with st.container():
     if Show_Graph == True:
         my_bar = st.progress(0)
@@ -259,8 +271,8 @@ with st.container():
         st.pyplot(fig_1)
         st.pyplot(fig_2)
 # ---| PLOTLY GRAPH |--->>>>
-        fig_py_1 = px.line(forecast, x="ds", y="yhat", title='Forecast')
-        fig_py_3 = px.line(test_wd, x="DateTime", y="temperature", title='Weather')
+        fig_py_1 = px.line(forecast, x="ds", y="yhat", title='Your Energy Consumption Over the next month')
+        fig_py_3 = px.line(test_wd, x="DateTime", y="temperature", title='How the weather will affect your energy consumption over the next month')
         st.plotly_chart(fig_py_1)
         st.plotly_chart(fig_py_3)
 # ---| FOOTER SECTION|--->>>>
