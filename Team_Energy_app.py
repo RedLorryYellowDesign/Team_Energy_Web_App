@@ -14,6 +14,7 @@
 from decimal import FloatOperation
 from multiprocessing.sharedctypes import Value
 from pickle import FALSE
+from re import X
 import requests # Allows use of URL imports
 import streamlit as st # Allows compatibility with Streamlit
 from streamlit_lottie import st_lottie # Allows lottie animation
@@ -190,16 +191,16 @@ with st.container():
         st.write("Let's get started. Just click on the next tab called Q1 to")
         st.write("get started")
     with tab1:
-        st.write("Please Select your Tarrif Type")
-        User_Tarrif_Selected = st.selectbox('Pick one', ["","Fixed Tarrif", "Variable Tarrif"])
-        if User_Tarrif_Selected == "Fixed Tarrif":
+        st.write("Please Select your Tariff Type")
+        User_Tarrif_Selected = st.selectbox('Pick one', ["","Fixed Tariff", "Variable Tariff"])
+        if User_Tarrif_Selected == "Fixed Tariff":
             User_Tarrif_Selected = "Std"
-            st.write("You have selected Fixed Tarrif")
-        elif User_Tarrif_Selected == "Variable Tarrif":
+            st.write("You have selected Fixed Tariff")
+        elif User_Tarrif_Selected == "Variable Tariff":
             User_Tarrif_Selected = "ToU"
-            st.write("You have selected Variable Tarrif")
+            st.write("You have selected Variable Tariff")
         else:
-            st.warning("Please select a tarrif")
+            st.warning("Please select a tariff")
 
         with tab3:
             st.write("What is your house type?")
@@ -232,7 +233,7 @@ with st.container():
                     User_Group_Selected = questions(Q1 = Question_1, Q2 = Question_2, Q3 = Question_3, Q4 = Question_4)
                     # forecast = Mode_Predict_Run(User_Tarrif_Selected = User_Tarrif_Selected,User_Group_Selected = User_Group_Selected)
 
-                    with st.spinner('Calling the model'):
+                    with st.spinner(f'Calling the model for Acorn group: {User_Group_Selected}'):
                         time.sleep(5)
                         st.success('Good so far')
                         # User_Group_Selected = questions(Q1 = Question_1, Q2 = Question_2, Q3 = Question_3, Q4 = Question_4)
@@ -261,8 +262,12 @@ with st.container():
             time.sleep(0.1)
         my_bar.progress(percent_complete + 1)
         fig_1 = plt.figure(figsize=(15, 6))
+        plt.ylabel('KWH/hh')
+        plt.title('Forecasted Energy vs Actual Energy Usage Demo')
         sns.lineplot(x=forecast['ds'],y=forecast['yhat'],label='Forecast');
-        sns.lineplot(x=test_df['DateTime'],y=test_df['KWH/hh'],label='Actual');
+        #sns.lineplot(x=test_df['DateTime'],y=test_df['KWH/hh'],label='Actual');
+        x = test_df['DateTime'].loc[(test_df['DateTime'] <= '2014-02-14')]
+        sns.lineplot(x=x,y=test_df['KWH/hh'],label='Actual')
         fig_2 = figure(figsize=(15,6))
         sns.lineplot(x=test_wd['DateTime'],y=test_wd['temperature'],label='Weather');
         with st.spinner('Wait for it...'):
