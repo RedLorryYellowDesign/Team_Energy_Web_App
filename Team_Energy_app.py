@@ -169,7 +169,7 @@ def Mode_Predict_Run(User_Tarrif_Selected, User_Group_Selected):
     train_wd, test_wd = get_weather(train_df, test_df)
     forecast = forecast_model(m,train_wd,test_wd,add_weather=True)
     Show_Graph = True
-    st.success('Done, Plostting Graphis now.')
+    st.success('Done, Plotting Graphs now.')
     return forecast, Show_Graph
 # ---| HEADER SECTION |--->>>>
 with st.container():
@@ -184,7 +184,7 @@ with st.container():
         st.empty()
 # ---| MAIN SECTION |--->>>>  Cleaned
 with st.container():
-    tab0, tab1, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Intro","Q1", "Q2","Q3","Q4","Q5","Submit"])
+    tab0, tab1, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Intro","Tariff Type", "House Type","Ownership Status","Bedroom Number","Income","Submit"])
     with tab0:
         st.write("This app will help you to predict your energy consumption")
         st.write("All you need to do is answer a few questions, sound good?")
@@ -233,7 +233,7 @@ with st.container():
                     User_Group_Selected = questions(Q1 = Question_1, Q2 = Question_2, Q3 = Question_3, Q4 = Question_4)
                     # forecast = Mode_Predict_Run(User_Tarrif_Selected = User_Tarrif_Selected,User_Group_Selected = User_Group_Selected)
 
-                    with st.spinner(f'Calling the model for Acorn group: {User_Group_Selected}'):
+                    with st.spinner(f'Calling the model for your personalised information. Acorn Group {User_Group_Selected}'):
                         time.sleep(5)
                         st.success('Good so far')
                         # User_Group_Selected = questions(Q1 = Question_1, Q2 = Question_2, Q3 = Question_3, Q4 = Question_4)
@@ -274,7 +274,12 @@ with st.container():
             time.sleep(5)
         st.success('Done!')
         st.pyplot(fig_1)
+        total_usage = forecast.sum()
+        tu = total_usage.to_string().strip('yhatdtype:float64')
+        average_usage = 330.47289
+        st.caption(f'You will use a predicted total of {tu} KWH/hh next month, compared to {average_usage} KWH/hh in the average home')
         st.pyplot(fig_2)
+
 # ---| PLOTLY GRAPH |--->>>>
         fig_py_1 = px.line(forecast, x="ds", y="yhat", title='Your Energy Consumption Over the next month')
         fig_py_3 = px.line(test_wd, x="DateTime", y="temperature", title='How the weather will affect your energy consumption over the next month')
