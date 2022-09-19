@@ -190,16 +190,16 @@ with st.container():
         st.write("Let's get started. Just click on the next tab called Q1 to")
         st.write("get started")
     with tab1:
-        st.write("Please Select your Tarrif Type")
-        User_Tarrif_Selected = st.selectbox('Pick one', ["","Fixed Tarrif", "Variable Tarrif"])
-        if User_Tarrif_Selected == "Fixed Tarrif":
+        st.write("Please Select your Tariff Type")
+        User_Tarrif_Selected = st.selectbox('Pick one', ["","Fixed Tariff", "Variable Tariff"])
+        if User_Tarrif_Selected == "Fixed Tariff":
             User_Tarrif_Selected = "Std"
-            st.write("You have selected Fixed Tarrif")
-        elif User_Tarrif_Selected == "Variable Tarrif":
+            st.write("You have selected Fixed Tariff")
+        elif User_Tarrif_Selected == "Variable Tariff":
             User_Tarrif_Selected = "ToU"
-            st.write("You have selected Variable Tarrif")
+            st.write("You have selected Variable Tariff")
         else:
-            st.warning("Please select a tarrif")
+            st.warning("Please select a tariff")
 
         with tab3:
             st.write("What is your house type?")
