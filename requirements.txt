@@ -2,9 +2,9 @@ Pillow==9.2.0
 plotly==5.10.0
 requests==2.27.1
 streamlit==1.12.2
-streamlit_lottie==0.0.3
+streamlit-lottie==0.0.3
 requests ==2.27.1
-
+seaborn==0.12.0
 
 # packaging
 pip>=9
@@ -17,9 +17,7 @@ numpy
 pandas
 scikit-learn
 pandas
-seaborn
 matplotlib
-plotly
 
 # tests/linter
 black
