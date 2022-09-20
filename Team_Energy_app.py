@@ -148,8 +148,20 @@ def questions(Q1, Q2, Q3, Q4):
     elif total_values < 5:
         User_Group_Selected = 'Q'
     return User_Group_Selected
+# api check
+@st.experimental_memo
+def api_check_call(check=False):
+    url = f"https://team-weather-lewagon-sf2mcflzda-ew.a.run.app"
+    if check == True:
+        r = requests.get(url/AlL_Good)
+        if r.status_code != 200:
+            return None
+        return r.json()
+    else:
+        st.write("API Call is set to False, Please Enable API Call")
 
 @st.experimental_memo
+<<<<<<< Updated upstream
 def Mode_Predict_Run(User_Tarrif_Selected, User_Group_Selected):
     name = User_Group_Selected
     tariff = User_Tarrif_Selected
@@ -169,6 +181,18 @@ def Mode_Predict_Run(User_Tarrif_Selected, User_Group_Selected):
     Show_Graph = True
     st.success('Done, Plostting Graphis now.')
     return forecast, Show_Graph
+=======
+def api_model_call(model,name, tariff):
+    url = f"https://team-weather-lewagon-sf2mcflzda-ew.a.run.app"
+    if model == RNN:
+        sel_model = "RNN_predict"
+    elif model == predict:
+        sel_model = "predict"
+    else:
+        return "Please select a model"
+    name = name
+    tariff = tariff
+>>>>>>> Stashed changes
 
 # ---| HEADER SECTION |--->>>>
 with st.container():
@@ -288,7 +312,7 @@ with st.container():
         st.write("This app was created by the Team Energy. The Team Energy is a group of 4 students from Le Wagon Data Science Bootcamp. The Team Energy is made up of the following members:")
     with Flooter_col_2:
         if Lottie_off == False:
-           st_lottie (Team_Lottie_Animation, speed=1, key="i")
+            st_lottie (Team_Lottie_Animation, speed=1, key="i")
     with Flooter_col_3:
         st.write("Zenan Ahmed")
         st.write("[ZenanAH](https://github.com/ZenanAH)")
